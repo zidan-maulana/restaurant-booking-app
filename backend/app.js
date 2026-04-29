@@ -12,7 +12,9 @@ app.use(express.json());
 
 // routes
 const authRoutes = require("./routes/authRoutes");
+const tableRoutes = require("./routes/tableRoutes");
 app.use("/api/auth", authRoutes);
+app.use("/api/tables", tableRoutes);
 
 // route test
 app.get("/", (req, res) => {
