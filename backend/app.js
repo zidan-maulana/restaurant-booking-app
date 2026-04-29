@@ -13,8 +13,10 @@ app.use(express.json());
 // routes
 const authRoutes = require("./routes/authRoutes");
 const tableRoutes = require("./routes/tableRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 app.use("/api/auth", authRoutes);
 app.use("/api/tables", tableRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 // route test
 app.get("/", (req, res) => {
