@@ -122,7 +122,9 @@ exports.getMyBookings = (req, res) => {
 
 // GET semua booking untuk admin
 exports.getAllBookings = (req, res) => {
-  const query = `
+  const { status, date } = req.query;
+
+  let query = `
     SELECT 
       bookings.id,
       bookings.booking_date,
@@ -137,10 +139,24 @@ exports.getAllBookings = (req, res) => {
     FROM bookings
     JOIN users ON bookings.user_id = users.id
     JOIN tables ON bookings.table_id = tables.id
-    ORDER BY bookings.created_at DESC
+    WHERE 1 = 1
   `;
 
-  db.query(query, (err, results) => {
+  const params = [];
+
+  if (status) {
+    query += " AND bookings.status = ?";
+    params.push(status);
+  }
+
+  if (date) {
+    query += " AND bookings.booking_date = ?";
+    params.push(date);
+  }
+
+  query += " ORDER BY bookings.created_at DESC";
+
+  db.query(query, params, (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({
@@ -225,6 +241,60 @@ exports.cancelBooking = (req, res) => {
       res.json({
         message: "Booking berhasil dibatalkan ❌"
       });
+    });
+  });
+};
+
+// APPROVE booking (admin only)
+exports.approveBooking = (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+    UPDATE bookings
+    SET status = 'approved'
+    WHERE id = ?
+  `;
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({
+        message: "Gagal approve booking"
+      });
+    }
+
+    res.json({
+      message: "Booking berhasil di-approve ✅"
+    });
+  });
+};
+
+// REJECT booking (admin only)
+exports.rejectBooking = (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+    UPDATE bookings
+    SET status = 'rejected'
+    WHERE id = ? AND status = 'pending'
+  `;
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({
+        message: "Gagal reject booking"
+      });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({
+        message: "Booking tidak ditemukan atau status bukan pending"
+      });
+    }
+
+    res.json({
+      message: "Booking berhasil ditolak"
     });
   });
 };
