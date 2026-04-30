@@ -46,6 +46,8 @@ exports.login = (req, res) => {
     }
 
     const user = results[0];
+    // Debug Sementara
+    //console.log("USER LOGIN:", user);
 
     const isPasswordValid = bcrypt.compareSync(password, user.password);
 
@@ -56,7 +58,8 @@ exports.login = (req, res) => {
     const token = jwt.sign(
       {
         id: user.id,
-        email: user.email
+        email: user.email,
+        role: user.role
       },
       process.env.JWT_SECRET,
       {
@@ -70,7 +73,8 @@ exports.login = (req, res) => {
       user: {
         id: user.id,
         nama: user.nama,
-        email: user.email
+        email: user.email,
+        role: user.role
       }
     });
   });
