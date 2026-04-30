@@ -11,29 +11,81 @@ exports.createBooking = (req, res) => {
     });
   }
 
-  const query = `
-    INSERT INTO bookings 
-    (user_id, table_id, booking_date, booking_time, guest_count)
-    VALUES (?, ?, ?, ?, ?)
-  `;
+  const tableQuery = "SELECT * FROM tables WHERE id = ?";
 
-  db.query(
-    query,
-    [userId, table_id, booking_date, booking_time, guest_count],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({
-          message: "Gagal membuat booking"
-        });
-      }
-
-      res.status(201).json({
-        message: "Booking berhasil dibuat ✅",
-        bookingId: result.insertId
+  db.query(tableQuery, [table_id], (tableErr, tableResults) => {
+    if (tableErr) {
+      console.error(tableErr);
+      return res.status(500).json({
+        message: "Gagal mengecek data meja"
       });
     }
-  );
+
+    if (tableResults.length === 0) {
+      return res.status(404).json({
+        message: "Meja tidak ditemukan"
+      });
+    }
+
+    const selectedTable = tableResults[0];
+
+    if (guest_count > selectedTable.capacity) {
+      return res.status(400).json({
+        message: `Jumlah tamu melebihi kapasitas meja. Kapasitas meja ini adalah ${selectedTable.capacity} orang`
+      });
+    }
+
+    const checkQuery = `
+      SELECT * FROM bookings 
+      WHERE table_id = ? 
+      AND booking_date = ? 
+      AND booking_time = ?
+      AND status IN ('pending', 'approved')
+    `;
+
+    db.query(
+      checkQuery,
+      [table_id, booking_date, booking_time],
+      (checkErr, checkResults) => {
+        if (checkErr) {
+          console.error(checkErr);
+          return res.status(500).json({
+            message: "Gagal mengecek ketersediaan meja"
+          });
+        }
+
+        if (checkResults.length > 0) {
+          return res.status(409).json({
+            message: "Meja sudah dibooking pada tanggal dan jam tersebut"
+          });
+        }
+
+        const insertQuery = `
+          INSERT INTO bookings 
+          (user_id, table_id, booking_date, booking_time, guest_count)
+          VALUES (?, ?, ?, ?, ?)
+        `;
+
+        db.query(
+          insertQuery,
+          [userId, table_id, booking_date, booking_time, guest_count],
+          (insertErr, result) => {
+            if (insertErr) {
+              console.error(insertErr);
+              return res.status(500).json({
+                message: "Gagal membuat booking"
+              });
+            }
+
+            res.status(201).json({
+              message: "Booking berhasil dibuat ✅",
+              bookingId: result.insertId
+            });
+          }
+        );
+      }
+    );
+  });
 };
 
 // GET booking milik user yang sedang login
