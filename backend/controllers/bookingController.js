@@ -192,3 +192,39 @@ exports.updateBookingStatus = (req, res) => {
     });
   });
 };
+
+// Cancel booking (user hanya bisa cancel booking miliknya sendiri)
+exports.cancelBooking = (req, res) => {
+  const bookingId = req.params.id;
+  const userId = req.user.id;
+
+  // cek apakah booking milik user
+  const checkQuery = "SELECT * FROM bookings WHERE id = ? AND user_id = ?";
+
+  db.query(checkQuery, [bookingId, userId], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Gagal cancel booking" });
+    }
+
+    if (results.length === 0) {
+      return res.status(403).json({
+        message: "Anda tidak memiliki akses ke booking ini"
+      });
+    }
+
+    // update status jadi cancelled
+    const updateQuery = "UPDATE bookings SET status = 'cancelled' WHERE id = ?";
+
+    db.query(updateQuery, [bookingId], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Gagal cancel booking" });
+      }
+
+      res.json({
+        message: "Booking berhasil dibatalkan ❌"
+      });
+    });
+  });
+};
