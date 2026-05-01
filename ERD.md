@@ -1,6 +1,6 @@
-erDiagram
-    USERS ||--o{ BOOKINGS : makes
-    TABLES ||--o{ BOOKINGS : reserved_for
+    erDiagram
+        USERS ||--o{ BOOKINGS : makes
+        TABLES ||--o{ BOOKINGS : reserved_for
 
     USERS {
         int id PK
