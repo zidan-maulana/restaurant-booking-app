@@ -47,7 +47,7 @@ exports.login = (req, res) => {
 
     const user = results[0];
     // Debug Sementara
-    //console.log("USER LOGIN:", user);
+    // console.log("USER LOGIN:", user);
 
     const isPasswordValid = bcrypt.compareSync(password, user.password);
 
