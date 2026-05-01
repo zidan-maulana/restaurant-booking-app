@@ -1,313 +1,225 @@
-# API Documentation - Restaurant Booking App
+# API Documentation
 
 ## Base URL
 
-http://localhost:5000
+```
+http://localhost:5000/api
+```
 
 ---
 
 ## Authentication
 
-Beberapa endpoint membutuhkan token JWT.
+### Register
 
-Format header:
+**POST** `/auth/register`
 
-Authorization: Bearer JWT_TOKEN
+Request Body:
+
+```json
+{
+  "name": "User Name",
+  "email": "user@email.com",
+  "password": "password"
+}
+```
 
 ---
 
-## AUTH
+### Login
 
-### Register User
+**POST** `/auth/login`
 
-POST /api/auth/register
+Request Body:
 
-Body:
-
+```json
 {
-  "nama": "User Test",
-  "email": "usertest@email.com",
-  "password": "123456"
+  "email": "user@email.com",
+  "password": "password"
 }
+```
 
 Response:
 
+```json
 {
-  "message": "Register berhasil",
-  "userId": 1
+  "token": "JWT_TOKEN"
 }
+```
 
 ---
 
-### Login User / Admin
-
-POST /api/auth/login
-
-Body:
-
-{
-  "email": "usertest@email.com",
-  "password": "123456"
-}
-
-Response:
-
-{
-  "message": "Login berhasil",
-  "token": "JWT_TOKEN",
-  "user": {
-    "id": 1,
-    "nama": "User Test",
-    "email": "usertest@email.com",
-    "role": "user"
-  }
-}
-
----
-
-## TABLES
+## Table Endpoints (Admin)
 
 ### Get All Tables
 
-GET /api/tables
-
-Auth: Tidak wajib login
-
-Response:
-
-[
-  {
-    "id": 1,
-    "table_number": "T01",
-    "capacity": 2,
-    "status": "available",
-    "created_at": "2026-04-30T00:00:00.000Z"
-  }
-]
+**GET** `/tables`
 
 ---
 
-### Create Table (Admin Only)
+### Create Table
 
-POST /api/tables
+**POST** `/tables`
 
 Headers:
-Authorization: Bearer JWT_TOKEN_ADMIN
 
-Body:
+```
+Authorization: Bearer <token>
+```
 
+Request Body:
+
+```json
 {
-  "table_number": "T10",
-  "capacity": 6
+  "table_number": "T01",
+  "capacity": 4
 }
-
-Response:
-
-{
-  "message": "Meja berhasil ditambahkan",
-  "tableId": 6
-}
+```
 
 ---
 
-### Update Table (Admin Only)
+### Update Table
 
-PUT /api/tables/:id
-
-Contoh:
-PUT /api/tables/6
-
-Body:
-
-{
-  "table_number": "T10",
-  "capacity": 8
-}
-
-Response:
-
-{
-  "message": "Meja berhasil diupdate"
-}
+**PUT** `/tables/:id`
 
 ---
 
-### Delete Table (Admin Only)
+### Delete Table
 
-DELETE /api/tables/:id
-
-Contoh:
-DELETE /api/tables/6
-
-Response:
-
-{
-  "message": "Meja berhasil dihapus"
-}
+**DELETE** `/tables/:id`
 
 ---
 
-## BOOKINGS
+## Booking Endpoints
 
 ### Create Booking
 
-POST /api/bookings
+**POST** `/bookings`
 
 Headers:
-Authorization: Bearer JWT_TOKEN
 
-Body:
+```
+Authorization: Bearer <token>
+```
 
+Request Body:
+
+```json
 {
   "table_id": 1,
   "booking_date": "2026-05-03",
   "booking_time": "19:00:00",
   "guest_count": 2
 }
+```
 
-Response:
+---
 
-{
-  "message": "Booking berhasil dibuat",
-  "bookingId": 1
-}
+### Get All Bookings (Admin)
 
-Kemungkinan error:
-
-{
-  "message": "Meja sudah dibooking pada tanggal dan jam tersebut"
-}
-
-{
-  "message": "Jumlah tamu melebihi kapasitas meja"
-}
+**GET** `/bookings`
 
 ---
 
 ### Get My Bookings
 
-GET /api/bookings/my
+**GET** `/bookings/my`
 
 Headers:
-Authorization: Bearer JWT_TOKEN
 
-Response:
-
-[
-  {
-    "id": 1,
-    "booking_date": "2026-05-03T00:00:00.000Z",
-    "booking_time": "19:00:00",
-    "guest_count": 2,
-    "status": "pending",
-    "created_at": "2026-04-30T00:00:00.000Z",
-    "table_number": "T01",
-    "capacity": 2
-  }
-]
+```
+Authorization: Bearer <token>
+```
 
 ---
 
-### Get All Bookings (Admin Only)
+## Booking Status Management
 
-GET /api/bookings
+### Approve Booking (Admin)
 
-Headers:
-Authorization: Bearer JWT_TOKEN_ADMIN
-
-Optional query:
-
-/api/bookings?status=pending  
-/api/bookings?date=2026-05-03  
-/api/bookings?status=pending&date=2026-05-03  
+**PUT** `/bookings/:id/approve`
 
 ---
 
-### Approve Booking (Admin Only)
+### Reject Booking (Admin)
 
-PUT /api/bookings/:id/approve
-
-Contoh:
-PUT /api/bookings/10/approve
-
-Response:
-
-{
-  "message": "Booking berhasil di-approve"
-}
-
----
-
-### Reject Booking (Admin Only)
-
-PUT /api/bookings/:id/reject
-
-Contoh:
-PUT /api/bookings/11/reject
-
-Response:
-
-{
-  "message": "Booking berhasil ditolak"
-}
+**PUT** `/bookings/:id/reject`
 
 ---
 
 ### Cancel Booking (User)
 
-PUT /api/bookings/:id/cancel
+**PUT** `/bookings/:id/cancel`
 
-Headers:
-Authorization: Bearer JWT_TOKEN
+---
 
-Contoh:
-PUT /api/bookings/10/cancel
+## Filtering Booking
 
-Response:
+### Filter by Status
 
+```
+GET /bookings?status=pending
+```
+
+---
+
+### Filter by Date
+
+```
+GET /bookings?date=2026-05-03
+```
+
+---
+
+### Combine Filter
+
+```
+GET /bookings?status=pending&date=2026-05-03
+```
+
+---
+
+## Booking Status Values
+
+| Status   | Description           |
+| -------- | --------------------- |
+| pending  | Waiting for approval  |
+| approved | Approved by admin     |
+| rejected | Rejected by admin     |
+| canceled | Canceled by user      |
+| expired  | Automatically expired |
+
+---
+
+## Auto Expire Mechanism
+
+Booking dengan status `pending` akan otomatis berubah menjadi `expired` jika tidak diproses dalam waktu 30 menit.
+
+---
+
+## Error Response
+
+Contoh response:
+
+```json
 {
-  "message": "Booking berhasil dibatalkan"
+  "message": "Terjadi kesalahan pada server"
 }
-
-Error:
-
-{
-  "message": "Anda tidak memiliki akses ke booking ini"
-}
+```
 
 ---
 
-## ROLE ACCESS SUMMARY
+## Testing
 
-| Feature | User | Admin |
-|--------|------|------|
-| Register | Yes | Yes |
-| Login | Yes | Yes |
-| Get tables | Yes | Yes |
-| Create booking | Yes | Yes |
-| Get my bookings | Yes | Yes |
-| Cancel own booking | Yes | Yes |
-| Get all bookings | No | Yes |
-| Approve booking | No | Yes |
-| Reject booking | No | Yes |
-| Create table | No | Yes |
-| Update table | No | Yes |
-| Delete table | No | Yes |
+Disarankan menggunakan:
+
+* Thunder Client
+* Postman
 
 ---
 
-## Booking Status
+## Catatan
 
-pending = booking baru dibuat  
-approved = disetujui admin  
-rejected = ditolak admin  
-cancelled = dibatalkan user  
-expired = otomatis oleh sistem  
-
----
-
-## AUTO EXPIRE
-
-Booking otomatis menjadi expired jika:
-- status = pending
-- lebih dari 30 menit
+* Endpoint tertentu membutuhkan autentikasi JWT
+* Role admin diperlukan untuk approve dan reject booking
+* Pastikan token valid saat melakukan request ke endpoint protected
