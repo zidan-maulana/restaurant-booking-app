@@ -1,122 +1,184 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from 'react';
+import Layout from './components/Layout';
+import Home from './pages/Home';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'book' | 'my-bookings' | 'login' | 'admin-dash' | 'tables'
+  const [simulatedRole, setSimulatedRole] = useState('guest'); // 'guest' | 'customer' | 'admin'
+
+  // Handles mock navigation across pages
+  const handleNavigate = (page) => {
+    setCurrentPage(page);
+    
+    // Auto-update simulated role depending on navigated page for convenience
+    if (page === 'admin-dash' || page === 'tables') {
+      setSimulatedRole('admin');
+    } else if (page === 'book' || page === 'my-bookings') {
+      setSimulatedRole('customer');
+    } else if (page === 'home' || page === 'login') {
+      // Keep current role or reset
+    }
+  };
+
+  const handleRoleChange = (newRole) => {
+    setSimulatedRole(newRole);
+    if (newRole === 'guest') {
+      setCurrentPage('home');
+    }
+  };
+
+  // State router renderer
+  const renderPageContent = () => {
+    switch (currentPage) {
+      case 'home':
+        return <Home onNavigate={handleNavigate} />;
+        
+      case 'book':
+        return (
+          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 6 Preview</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Customer Dashboard</h2>
+            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
+              Pemesanan meja, pemilih tanggal/jam, dan layout grid meja interaktif akan dibangun lengkap pada **Sprint 6**.
+            </p>
+            <button
+              onClick={() => handleNavigate('home')}
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+            >
+              Back to Home
+            </button>
+          </div>
+        );
+
+      case 'my-bookings':
+        return (
+          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 7 Preview</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">My Bookings</h2>
+            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
+              Riwayat daftar booking pelanggan dan aksi pembatalan (Cancel) akan dibangun lengkap pada **Sprint 7**.
+            </p>
+            <button
+              onClick={() => handleNavigate('home')}
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+            >
+              Back to Home
+            </button>
+          </div>
+        );
+
+      case 'login':
+        return (
+          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 4 Preview</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Login Page</h2>
+            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
+              Form login split-screen dan state autentikasi lokal tiruan akan dibangun lengkap pada **Sprint 4**.
+            </p>
+            
+            {/* Quick Login Toggles */}
+            <div className="flex flex-col gap-3 p-4 bg-warm-cream-dark/50 border border-bitter-chocolate/10 w-full mb-8">
+              <p className="text-xs font-semibold uppercase text-bitter-chocolate/60">Simulate Quick Login</p>
+              <div className="flex gap-4 justify-center">
+                <button
+                  onClick={() => {
+                    setSimulatedRole('customer');
+                    setCurrentPage('book');
+                  }}
+                  className="text-xs uppercase tracking-wider font-bold bg-bitter-chocolate text-warm-cream px-4 py-2 hover:bg-antique-gold transition-colors duration-300"
+                >
+                  As Customer
+                </button>
+                <button
+                  onClick={() => {
+                    setSimulatedRole('admin');
+                    setCurrentPage('admin-dash');
+                  }}
+                  className="text-xs uppercase tracking-wider font-bold bg-bitter-chocolate text-warm-cream px-4 py-2 hover:bg-antique-gold transition-colors duration-300"
+                >
+                  As Admin
+                </button>
+              </div>
+            </div>
+
+            <button
+              onClick={() => handleNavigate('home')}
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+            >
+              Back to Home
+            </button>
+          </div>
+        );
+
+      case 'admin-dash':
+        return (
+          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 8 Preview</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Admin Dashboard</h2>
+            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
+              Panel manajemen booking oleh admin (Approve/Reject dengan filter status dan tanggal) akan dibangun lengkap pada **Sprint 8**.
+            </p>
+            <button
+              onClick={() => handleNavigate('home')}
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+            >
+              Back to Home
+            </button>
+          </div>
+        );
+
+      case 'tables':
+        return (
+          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 9 Preview</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Table Management</h2>
+            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
+              Panel CRUD Meja (tambah, edit, hapus meja restoran) oleh admin akan dibangun lengkap pada **Sprint 9**.
+            </p>
+            <button
+              onClick={() => handleNavigate('home')}
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+            >
+              Back to Home
+            </button>
+          </div>
+        );
+
+      default:
+        return <Home onNavigate={handleNavigate} />;
+    }
+  };
+
+  // Intercept default anchor clicks for mockup routing
+  const handleAnchorClick = (e) => {
+    const href = e.target.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const targetPage = href.substring(1);
+      
+      // Map hash routes to state pages
+      const pageMapping = {
+        'home': 'home',
+        'book': 'book',
+        'my-bookings': 'my-bookings',
+        'login': 'login',
+        'admin-dash': 'admin-dash',
+        'tables': 'tables'
+      };
+      
+      if (pageMapping[targetPage]) {
+        handleNavigate(pageMapping[targetPage]);
+      }
+    }
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div onClick={handleAnchorClick}>
+      <Layout userRole={simulatedRole} onRoleChange={handleRoleChange}>
+        {renderPageContent()}
+      </Layout>
+    </div>
+  );
 }
 
-export default App
+export default App;
