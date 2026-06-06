@@ -67,6 +67,31 @@ export function AuthProvider({ children }) {
     });
   };
 
+  // Simulated register function
+  const register = (nama, email, password) => {
+    return new Promise((resolve, reject) => {
+      setLoading(true);
+      setTimeout(() => {
+        if (!nama || !email || !password) {
+          setLoading(false);
+          reject(new Error('Semua kolom pendaftaran wajib diisi.'));
+          return;
+        }
+
+        // Mock success
+        const newUser = {
+          id: Date.now(),
+          nama: nama,
+          email: email,
+          role: 'customer',
+          token: 'mock_jwt_token_customer_new'
+        };
+        setLoading(false);
+        resolve(newUser);
+      }, 800);
+    });
+  };
+
   // Simulated logout function
   const logout = () => {
     setUser(null);
@@ -74,8 +99,9 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, register }}>
       {children}
     </AuthContext.Provider>
   );
 }
+

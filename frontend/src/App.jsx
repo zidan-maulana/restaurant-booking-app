@@ -3,6 +3,8 @@ import { AuthProvider, AuthContext } from './context/AuthContext';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Register from './pages/Register';
+
 
 function AppContent() {
   const { user, logout } = useContext(AuthContext);
@@ -64,23 +66,8 @@ function AppContent() {
         return <Login onNavigate={handleNavigate} />;
 
       case 'register':
-        return (
-          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 5</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Halaman Pendaftaran</h2>
-            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Form registrasi pelanggan baru dan visual penunjang akan dibangun lengkap pada **Sprint 5**.
-            </p>
-            <div className="flex gap-4 justify-center">
-              <button
-                onClick={() => handleNavigate('login')}
-                className="text-xs uppercase font-bold tracking-widest text-antique-gold border-b border-antique-gold/30 hover:border-bitter-chocolate transition-colors duration-300 cursor-pointer"
-              >
-                Sudah memiliki akun? Masuk
-              </button>
-            </div>
-          </div>
-        );
+        return <Register onNavigate={handleNavigate} />;
+
 
       case 'admin-dash':
         return (
