@@ -5,6 +5,7 @@ export default function Layout({
   children,
   userRole = 'guest',
   onRoleChange,
+  showFooter = true,
 }) {
   return (
     <div className="flex flex-col min-h-screen bg-warm-cream text-bitter-chocolate selection:bg-antique-gold/25 selection:text-bitter-chocolate">
@@ -12,12 +13,12 @@ export default function Layout({
       <Navbar userRole={userRole} onRoleChange={onRoleChange} />
 
       {/* Main Layout Container */}
-      <main className="flex-grow max-w-6xl w-full mx-auto px-6 sm:px-12 py-12">
+      <main className="flex-grow">
         {children}
       </main>
 
       {/* Global Footer */}
-      <Footer />
+      {showFooter && <Footer />}
     </div>
   );
 }

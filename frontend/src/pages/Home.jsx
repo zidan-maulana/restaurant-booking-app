@@ -1,166 +1,365 @@
-import React from 'react';
-import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
-import heroImg from '../assets/hero.png';
+import { useState } from 'react';
+import heroImg from '../assets/hero_dining_room.png';
+
+// Menu pilihan premium dengan format mata uang Rupiah (Rp)
+const menuData = [
+  {
+    name: 'Cured Seabass Crudo',
+    rating: 3,
+    tagline: 'Jeruk meyer, minyak zaitun, garam laut',
+    description: 'Seabass segar iris tipis, dimarinasi dalam citrus oil pres dingin dan rempah organik.',
+    price: 'Rp 48.000',
+    category: 'Hidangan Pembuka'
+  },
+  {
+    name: 'Heirloom Tomato Salad',
+    rating: 3,
+    tagline: 'Keju burrata, selasih liar, cuka balsamic',
+    description: 'Tomat lokal pilihan berpadu burrata segar yang lembut dan renyah potongan sourdough.',
+    price: 'Rp 42.000',
+    category: 'Hidangan Pembuka'
+  },
+  {
+    name: 'Wood-Fired Duck Breast',
+    rating: 3,
+    tagline: 'Bebek panggang kayu, madu liar, rempah umbi',
+    description: 'Dada bebek bakar kayu empuk disajikan dengan wortel madu dan saus jus khas Atma.',
+    price: 'Rp 78.000',
+    category: 'Hidangan Utama'
+  },
+  {
+    name: 'Heritage Potato Gnocchi',
+    rating: 3,
+    tagline: 'Gnocchi kentang, jamur chanterelle, mentega sage',
+    description: 'Gnocchi kentang lembut ditumis dengan mentega sage wangi dan jamur liar musiman.',
+    price: 'Rp 64.000',
+    category: 'Hidangan Utama'
+  },
+  {
+    name: 'Atma Botanical Tonic',
+    rating: 3,
+    tagline: 'Krisantemum, kelengkeng, soda madu alami',
+    description: 'Minuman penyegar botani khas kami yang terinspirasi dari resep herbal klasik.',
+    price: 'Rp 32.000',
+    category: 'Minuman'
+  },
+  {
+    name: 'City Blossoms',
+    rating: 3,
+    tagline: 'Gin non-alkohol, matcha, perasan lemon',
+    description: 'Mocktail gin non-alkohol segar dengan sentuhan matcha alami dan jeruk pres bersih.',
+    price: 'Rp 32.000',
+    category: 'Minuman'
+  }
+];
+
+const categories = ['Semua', 'Hidangan Pembuka', 'Hidangan Utama', 'Minuman'];
 
 export default function Home({ onNavigate }) {
+  const [activeCategory, setActiveCategory] = useState('Semua');
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    date: '',
+    time: '',
+    guests: '2 Tamu'
+  });
+
+  const filteredMenu = activeCategory === 'Semua'
+    ? menuData
+    : menuData.filter(item => item.category === activeCategory);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (formData.name && formData.email && formData.date && formData.time) {
+      setFormSubmitted(true);
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-24">
-      {/* 1. Hero Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-8">
-        <div className="lg:col-span-7 flex flex-col gap-6 text-left">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold">
-            Est. 2026 — Jakarta
+    <div className="flex flex-col bg-warm-cream">
+      {/* 1. HERO SECTION: Ruang hangat untuk setiap pertemuan di meja */}
+      <section id="home" className="pt-20 pb-24 flex flex-col items-center justify-center text-center px-6 bg-warm-cream">
+        <div className="flex flex-col items-center gap-6 max-w-3xl">
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-antique-gold block">
+            Pengalaman Bersantap Premium
           </span>
-          <h1 className="font-serif italic font-light text-5xl sm:text-6xl md:text-7xl text-bitter-chocolate leading-[1.15] tracking-tight">
-            A space gathered around the *thoughtful* table.
+          <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-light italic text-bitter-chocolate leading-[1.15] tracking-tight">
+            Ruang hangat untuk setiap pertemuan di meja.
           </h1>
-          <p className="font-sans text-base text-bitter-chocolate/75 max-w-xl leading-relaxed">
-            Welcome to The Table. An intimate dining experience celebrating honest, seasonal ingredients and vintage hospitality. We invite you to slow down, converse, and enjoy.
+          <p className="font-sans text-sm sm:text-base text-bitter-chocolate/70 max-w-xl leading-relaxed">
+            Sajian bermakna. Dihidangkan dengan perhatian penuh. Kami mengundang Anda untuk bersantai sejenak, berbincang, dan menikmati rasa yang dibuat untuk dikenang.
           </p>
-          <div className="flex flex-wrap gap-4 mt-4">
-            <Button
-              variant="primary"
+          <div className="mt-4">
+            <button
               onClick={() => onNavigate('book')}
+              className="bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 px-10 rounded-full transition-colors duration-500 shadow-sm cursor-pointer"
             >
-              Reserve a Table
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                const element = document.getElementById('experience');
-                element?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              The Experience
-            </Button>
+              Reservasi Meja
+            </button>
           </div>
         </div>
 
-        {/* Asymmetric Framed Image */}
-        <div className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center">
-          <div className="p-3 bg-warm-cream-dark border border-bitter-chocolate/10 rounded-none w-full max-w-sm">
-            <div className="border border-bitter-chocolate/10 overflow-hidden bg-bitter-chocolate/5 h-80 flex items-center justify-center">
-              <img
-                src={heroImg}
-                alt="Main Dining Room"
-                className="w-full h-full object-cover grayscale opacity-90 contrast-125"
-              />
-            </div>
-            <p className="font-serif italic text-xs text-bitter-chocolate/60 text-center mt-3">
-              Our main dining room, captured in late afternoon light.
-            </p>
+        {/* Elegant Framed dining room image below the text, matching the visual layout */}
+        <div className="mt-16 w-full max-w-4xl p-3 bg-warm-cream-dark border border-bitter-chocolate/10 rounded-lg">
+          <div className="border border-bitter-chocolate/10 overflow-hidden bg-bitter-chocolate/5 h-[240px] sm:h-[360px] md:h-[420px] rounded-md flex items-center justify-center">
+            <img
+              src={heroImg}
+              alt="Atma Dining Room"
+              className="w-full h-full object-cover grayscale opacity-95 contrast-[1.05]"
+            />
           </div>
+          <p className="font-serif italic text-xs text-bitter-chocolate/60 text-center mt-3">
+            Ruang makan utama kami, dipotret dalam cahaya sore hari.
+          </p>
         </div>
       </section>
 
-      {/* Separator Line */}
-      <hr className="border-bitter-chocolate/10" />
-
-      {/* 2. Experience Section */}
-      <section id="experience" className="grid grid-cols-1 lg:grid-cols-12 gap-12 text-left">
-        <div className="lg:col-span-6 flex flex-col justify-center">
-          <h2 className="font-serif text-3xl sm:text-4xl italic font-light text-bitter-chocolate leading-relaxed pr-6">
-            "We believe that a meal is more than what is on the plate—it is the memory of the room, the sound of the glasses, and the company we keep."
+      {/* 2. EXPERIENCE SECTION: Keramahtamahan klasik */}
+      <section id="experience" className="py-24 px-6 sm:px-12 bg-warm-cream-dark/20 text-center flex flex-col items-center justify-center w-full border-t border-b border-bitter-chocolate/5">
+        <div className="flex items-center justify-center gap-4 text-antique-gold mb-8">
+          <span className="w-12 h-[1px] bg-antique-gold/30"></span>
+          <h2 className="font-serif text-2xl sm:text-3xl italic text-bitter-chocolate font-light tracking-wide">
+            Selamat Datang di Atma
           </h2>
+          <span className="w-12 h-[1px] bg-antique-gold/30"></span>
         </div>
-        <div className="lg:col-span-6 flex flex-col gap-6 font-sans text-sm text-bitter-chocolate/75 leading-relaxed justify-center">
+
+        <div className="flex flex-col gap-6 text-sm sm:text-base text-bitter-chocolate/80 max-w-3xl leading-relaxed font-sans">
           <p>
-            At The Table, we reject the noise of modern fast dining. Our kitchen works closely with local organic farmers and purveyors to source seasonal ingredients that are prepared with precision and served with warmth.
+            Atma adalah ruang untuk merayakan pertemuan. Tempat bersantai sejenak, menikmati kebersamaan, dan melupakan kesibukan dunia.
           </p>
           <p>
-            Every chair, light fixture, and ceramic plate has been carefully selected or handcrafted to foster conversation. Whether you are sharing a bottle from our curated natural wine list or celebrating a milestones with loved ones, you are part of our family.
+            Dapur kami mengolah bahan organik musiman terbaik secara jujur. Disajikan hangat oleh tim yang peduli dengan keahlian kuliner.
+          </p>
+          <p>
+            Setiap detail dirancang untuk kenyamanan Anda. Rasa yang dibuat untuk dikenang dalam setiap gigitan dan cerita.
           </p>
         </div>
+
+        <p className="font-serif italic text-base sm:text-lg text-antique-gold mt-10 max-w-xl leading-relaxed">
+          "Atma bukan sekadar tempat makan, kami ingin menjadi ruang makan favorit Anda."
+        </p>
       </section>
 
-      {/* Separator Line */}
-      <hr className="border-bitter-chocolate/10" />
-
-      {/* 3. Reservation Highlight Section */}
-      <section className="flex flex-col gap-12 text-left">
-        <div className="max-w-2xl">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold block mb-3">
-            Reservation Process
+      {/* 3. MENU SECTION: Whitespace luas, heading tipografi besar, gaya restoran mewah */}
+      <section id="menu" className="py-28 bg-warm-cream flex flex-col items-center">
+        <div className="max-w-4xl px-6 text-center mb-16">
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-antique-gold block mb-3">
+            Menu Pilihan
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl text-bitter-chocolate">
-            How to Secure Your Evening
+          <h2 className="font-serif italic text-4xl sm:text-5xl font-light text-bitter-chocolate mb-6">
+            Sajian Terbaik Kami
           </h2>
+          <p className="font-sans text-xs sm:text-sm text-bitter-chocolate/60 max-w-2xl mx-auto leading-relaxed">
+            Dibuat dengan presisi untuk menghadirkan rasa yang istimewa langsung ke meja Anda.
+          </p>
+          
+          {/* Menu Category Filter Pills */}
+          <div className="flex flex-wrap justify-center gap-2 mt-8 max-w-xl mx-auto">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`text-xs uppercase tracking-wider font-semibold px-5 py-2 rounded-full border transition-all duration-300 cursor-pointer ${
+                  activeCategory === cat
+                    ? 'bg-bitter-chocolate text-warm-cream border-bitter-chocolate font-bold'
+                    : 'bg-transparent text-bitter-chocolate/65 border-bitter-chocolate/20 hover:text-bitter-chocolate hover:border-bitter-chocolate/60'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Card 1 */}
-          <Card className="flex flex-col gap-4">
-            <span className="font-serif italic text-3xl text-antique-gold font-light">01.</span>
-            <h3 className="font-serif text-lg font-semibold text-bitter-chocolate">Choose Your Table</h3>
-            <p className="font-sans text-xs text-bitter-chocolate/70 leading-relaxed">
-              Explore our range of tables. From cozy two-person booths for intimate evenings to larger tables for groups of four to six guests.
-            </p>
-          </Card>
+        {/* Menu Grid (Soft rounded card corners, spacious tracking) */}
+        <div className="max-w-6xl w-full px-6 sm:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredMenu.map((item, idx) => (
+            <div
+              key={idx}
+              className="bg-warm-cream-dark/20 border border-bitter-chocolate/10 p-6 flex flex-col justify-between transition-all duration-300 hover:border-antique-gold/40 rounded-lg relative"
+            >
+              <div>
+                <div className="flex justify-between items-start gap-4 mb-2">
+                  <h4 className="font-serif text-lg font-bold text-bitter-chocolate leading-tight">
+                    {item.name}
+                  </h4>
+                  <div className="flex text-antique-gold text-[10px]">
+                    {Array.from({ length: item.rating }).map((_, i) => (
+                      <span key={i}>★</span>
+                    ))}
+                  </div>
+                </div>
 
-          {/* Card 2 */}
-          <Card className="flex flex-col gap-4">
-            <span className="font-serif italic text-3xl text-antique-gold font-light">02.</span>
-            <h3 className="font-serif text-lg font-semibold text-bitter-chocolate">Select Date & Time</h3>
-            <p className="font-sans text-xs text-bitter-chocolate/70 leading-relaxed">
-              Pick a date and choose an available 30-minute time slot. Confirm your guest count to ensure your booking complies with capacity.
-            </p>
-          </Card>
+                <p className="font-serif italic text-xs text-antique-gold mb-3 leading-relaxed">
+                  {item.tagline}
+                </p>
 
-          {/* Card 3 */}
-          <Card className="flex flex-col gap-4">
-            <span className="font-serif italic text-3xl text-antique-gold font-light">03.</span>
-            <h3 className="font-serif text-lg font-semibold text-bitter-chocolate">Await Confirmation</h3>
-            <p className="font-sans text-xs text-bitter-chocolate/70 leading-relaxed">
-              Our hosts review and approve your reservation request. Once confirmed, you will receive instant notification in your dashboard.
-            </p>
-          </Card>
-        </div>
+                <p className="font-sans text-xs text-bitter-chocolate/70 leading-relaxed mb-6">
+                  {item.description}
+                </p>
+              </div>
 
-        <div className="flex justify-center mt-4">
-          <Button
-            variant="primary"
-            onClick={() => onNavigate('book')}
-          >
-            Start Your Reservation
-          </Button>
+              <div className="border-t border-bitter-chocolate/5 pt-4 mt-auto">
+                <span className="font-serif text-sm font-semibold text-bitter-chocolate">
+                  {item.price}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* 4. Signature Details Section (Vintage Menu style) */}
-      <section className="border border-bitter-chocolate/10 bg-warm-cream-dark/20 p-8 sm:p-12 text-center flex flex-col gap-8 max-w-3xl mx-auto w-full">
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold">
-          On The Menu Tonight
-        </span>
-        <h2 className="font-serif italic text-3xl text-bitter-chocolate">
-          Signature Provisions
-        </h2>
-        <hr className="w-12 border-bitter-chocolate/20 mx-auto" />
-        
-        <div className="flex flex-col gap-6 text-left max-w-xl mx-auto w-full font-sans text-sm">
-          <div className="flex justify-between items-baseline gap-4">
-            <div>
-              <h4 className="font-serif text-base font-semibold text-bitter-chocolate">Wood-Fired Duck Breast</h4>
-              <p className="text-xs text-bitter-chocolate/60 mt-1">Slow roast duck, glazed with wild honey, served with roasted root herbs.</p>
-            </div>
-            <span className="font-serif text-base font-bold text-bitter-chocolate/80">32</span>
-          </div>
+      {/* 4. RESERVATION SECTION: Latar belakang bersih, spasi luas, form kontainer rounded */}
+      <section id="book" className="py-28 border-t border-bitter-chocolate/10 bg-warm-cream-dark/15 px-6 sm:px-12 text-center flex flex-col items-center w-full">
+        <div className="max-w-xl text-center mb-12">
+          <h2 className="font-serif text-3xl sm:text-4xl italic font-light text-bitter-chocolate">
+            Siapkan Tempat Anda
+          </h2>
+          <p className="font-sans text-xs sm:text-sm uppercase tracking-[0.2em] text-bitter-chocolate/55 mt-2">
+            Ajukan reservasi, kami akan menyiapkan meja Anda.
+          </p>
+        </div>
 
-          <div className="flex justify-between items-baseline gap-4">
-            <div>
-              <h4 className="font-serif text-base font-semibold text-bitter-chocolate">Heritage Potato Gnocchi</h4>
-              <p className="text-xs text-bitter-chocolate/60 mt-1">Hand-rolled gnocchi, organic chanterelle, brown butter sage sauce.</p>
+        {/* Center Reservation Card */}
+        <div className="w-full max-w-xl bg-warm-cream border border-bitter-chocolate/10 p-8 sm:p-10 text-left rounded-lg shadow-sm">
+          {formSubmitted ? (
+            <div className="text-center py-12 flex flex-col gap-4 animate-fade-in">
+              <span className="text-4xl">✨</span>
+              <h3 className="font-serif italic text-2xl text-antique-gold">Reservasi Diajukan</h3>
+              <p className="font-sans text-sm text-bitter-chocolate/80 max-w-md mx-auto leading-relaxed">
+                Terima kasih, <strong className="text-bitter-chocolate font-bold">{formData.name}</strong>. Pengajuan reservasi Anda untuk <strong className="text-bitter-chocolate font-bold">{formData.guests}</strong> pada <strong className="text-bitter-chocolate">{formData.date}</strong> pukul <strong className="text-bitter-chocolate">{formData.time}</strong> saat ini sedang menunggu persetujuan host kami.
+              </p>
+              <button
+                onClick={() => {
+                  setFormSubmitted(false);
+                  setFormData({ name: '', email: '', date: '', time: '', guests: '2 Tamu' });
+                }}
+                className="mt-6 text-xs uppercase tracking-widest text-antique-gold font-bold hover:text-bitter-chocolate transition-colors duration-300 border-b border-antique-gold/30 hover:border-bitter-chocolate"
+              >
+                Ajukan Reservasi Lain
+              </button>
             </div>
-            <span className="font-serif text-base font-bold text-bitter-chocolate/80">24</span>
-          </div>
+          ) : (
+            <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
+              {/* Name Field */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-wider font-semibold text-bitter-chocolate/60">
+                  Nama
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Nama Anda"
+                  required
+                  className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm"
+                />
+              </div>
 
-          <div className="flex justify-between items-baseline gap-4">
-            <div>
-              <h4 className="font-serif text-base font-semibold text-bitter-chocolate">Cured Seabass Crudo</h4>
-              <p className="text-xs text-bitter-chocolate/60 mt-1">Meyer lemon, cold-pressed olive oil, sea salt, pickled sea fennel.</p>
-            </div>
-            <span className="font-serif text-base font-bold text-bitter-chocolate/80">19</span>
-          </div>
+              {/* Email Field */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-wider font-semibold text-bitter-chocolate/60">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="email@anda.com"
+                  required
+                  className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm"
+                />
+              </div>
+
+              {/* Date & Time Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs uppercase tracking-wider font-semibold text-bitter-chocolate/60">
+                    Tanggal
+                  </label>
+                  <input
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs uppercase tracking-wider font-semibold text-bitter-chocolate/60">
+                    Waktu
+                  </label>
+                  <select
+                    name="time"
+                    value={formData.time}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm appearance-none"
+                  >
+                    <option value="">Pilih slot waktu</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                    <option value="12:30">12:30</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                    <option value="19:30">19:30</option>
+                    <option value="20:00">20:00</option>
+                    <option value="20:30">20:30</option>
+                    <option value="21:00">21:00</option>
+                    <option value="21:30">21:30</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Number of Guests Dropdown */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-wider font-semibold text-bitter-chocolate/60">
+                  Jumlah Tamu
+                </label>
+                <select
+                  name="guests"
+                  value={formData.guests}
+                  onChange={handleInputChange}
+                  className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm"
+                >
+                  <option value="1 Tamu">1 Tamu</option>
+                  <option value="2 Tamu">2 Tamu</option>
+                  <option value="3 Tamu">3 Tamu</option>
+                  <option value="4 Tamu">4 Tamu</option>
+                  <option value="5 Tamu">5 Tamu</option>
+                  <option value="6 Tamu">6 Tamu</option>
+                </select>
+              </div>
+
+              {/* Reserve Button */}
+              <button
+                type="submit"
+                className="mt-4 bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-md transition-colors duration-500 shadow-sm cursor-pointer"
+              >
+                Reservasi Meja
+              </button>
+
+              {/* Premium information disclaimer */}
+              <p className="text-[10px] font-sans text-bitter-chocolate/50 text-center mt-2 tracking-wider">
+                Untuk reservasi kelompok lebih dari 6 orang, silakan hubungi tim host kami secara langsung.
+              </p>
+            </form>
+          )}
         </div>
       </section>
     </div>

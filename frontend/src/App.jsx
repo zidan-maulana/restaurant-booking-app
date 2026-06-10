@@ -27,7 +27,7 @@ function App() {
     }
   };
 
-  // State router renderer
+  // State router renderer (Indonesian Copywriting for Sprint 2)
   const renderPageContent = () => {
     switch (currentPage) {
       case 'home':
@@ -35,111 +35,111 @@ function App() {
         
       case 'book':
         return (
-          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 6 Preview</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Customer Dashboard</h2>
+          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 6</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Halaman Pemesanan</h2>
             <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Pemesanan meja, pemilih tanggal/jam, dan layout grid meja interaktif akan dibangun lengkap pada **Sprint 6**.
+              Modul pemilihan meja interaktif, penanggalan, jam reservasi, dan visual tata letak meja akan dibangun lengkap pada **Sprint 6**.
             </p>
             <button
               onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
             >
-              Back to Home
+              Kembali ke Beranda
             </button>
           </div>
         );
 
       case 'my-bookings':
         return (
-          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 7 Preview</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">My Bookings</h2>
+          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 7</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Reservasi Saya</h2>
             <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Riwayat daftar booking pelanggan dan aksi pembatalan (Cancel) akan dibangun lengkap pada **Sprint 7**.
+              Riwayat daftar booking pelanggan dan tombol aksi pembatalan reservasi akan dibangun lengkap pada **Sprint 7**.
             </p>
             <button
               onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
             >
-              Back to Home
+              Kembali ke Beranda
             </button>
           </div>
         );
 
       case 'login':
         return (
-          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 4 Preview</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Login Page</h2>
+          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 3</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Halaman Masuk</h2>
             <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Form login split-screen dan state autentikasi lokal tiruan akan dibangun lengkap pada **Sprint 4**.
+              Form login split-screen dan state autentikasi lokal tiruan akan dibangun lengkap pada **Sprint 3**.
             </p>
             
             {/* Quick Login Toggles */}
             <div className="flex flex-col gap-3 p-4 bg-warm-cream-dark/50 border border-bitter-chocolate/10 w-full mb-8">
-              <p className="text-xs font-semibold uppercase text-bitter-chocolate/60">Simulate Quick Login</p>
+              <p className="text-xs font-semibold uppercase text-bitter-chocolate/60 text-center">Simulasi Uji Coba Cepat</p>
               <div className="flex gap-4 justify-center">
                 <button
                   onClick={() => {
                     setSimulatedRole('customer');
                     setCurrentPage('book');
                   }}
-                  className="text-xs uppercase tracking-wider font-bold bg-bitter-chocolate text-warm-cream px-4 py-2 hover:bg-antique-gold transition-colors duration-300"
+                  className="text-[10px] uppercase tracking-widest font-bold border border-bitter-chocolate/20 py-2.5 px-4 hover:bg-bitter-chocolate hover:text-warm-cream hover:border-transparent transition-all duration-300 text-center cursor-pointer text-bitter-chocolate"
                 >
-                  As Customer
+                  Sebagai Pelanggan
                 </button>
                 <button
                   onClick={() => {
                     setSimulatedRole('admin');
                     setCurrentPage('admin-dash');
                   }}
-                  className="text-xs uppercase tracking-wider font-bold bg-bitter-chocolate text-warm-cream px-4 py-2 hover:bg-antique-gold transition-colors duration-300"
+                  className="text-[10px] uppercase tracking-widest font-bold border border-bitter-chocolate/20 py-2.5 px-4 hover:bg-bitter-chocolate hover:text-warm-cream hover:border-transparent transition-all duration-300 text-center cursor-pointer text-bitter-chocolate"
                 >
-                  As Admin
+                  Sebagai Admin
                 </button>
               </div>
             </div>
 
             <button
               onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
             >
-              Back to Home
+              Kembali ke Beranda
             </button>
           </div>
         );
 
       case 'admin-dash':
         return (
-          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 8 Preview</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Admin Dashboard</h2>
+          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 8</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Kelola Reservasi (Admin)</h2>
             <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Panel manajemen booking oleh admin (Approve/Reject dengan filter status dan tanggal) akan dibangun lengkap pada **Sprint 8**.
+              Pusat monitoring admin (Approve/Reject pesanan dengan saringan tanggal & status) akan dibangun lengkap pada **Sprint 8**.
             </p>
             <button
               onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
             >
-              Back to Home
+              Kembali ke Beranda
             </button>
           </div>
         );
 
       case 'tables':
         return (
-          <div className="flex flex-col items-center justify-center py-20 text-center max-w-xl mx-auto">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Sprint 9 Preview</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Table Management</h2>
+          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 9</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Kelola Meja (Admin)</h2>
             <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Panel CRUD Meja (tambah, edit, hapus meja restoran) oleh admin akan dibangun lengkap pada **Sprint 9**.
+              Panel CRUD Meja (tambah, ubah, hapus meja restoran) oleh admin akan dibangun lengkap pada **Sprint 9**.
             </p>
             <button
               onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300"
+              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
             >
-              Back to Home
+              Kembali ke Beranda
             </button>
           </div>
         );
@@ -156,7 +156,6 @@ function App() {
       e.preventDefault();
       const targetPage = href.substring(1);
       
-      // Map hash routes to state pages
       const pageMapping = {
         'home': 'home',
         'book': 'book',
@@ -174,7 +173,11 @@ function App() {
 
   return (
     <div onClick={handleAnchorClick}>
-      <Layout userRole={simulatedRole} onRoleChange={handleRoleChange}>
+      <Layout 
+        userRole={simulatedRole} 
+        onRoleChange={handleRoleChange}
+        showFooter={currentPage !== 'login'}
+      >
         {renderPageContent()}
       </Layout>
     </div>
