@@ -1,33 +1,26 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { AuthProvider, AuthContext } from './context/AuthContext';
 import Layout from './components/Layout';
 import Home from './pages/Home';
+import Login from './pages/Login';
 
-function App() {
-  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'book' | 'my-bookings' | 'login' | 'admin-dash' | 'tables'
-  const [simulatedRole, setSimulatedRole] = useState('guest'); // 'guest' | 'customer' | 'admin'
+function AppContent() {
+  const { user, logout } = useContext(AuthContext);
+  const [currentPage, setCurrentPage] = useState('home');
 
   // Handles mock navigation across pages
   const handleNavigate = (page) => {
     setCurrentPage(page);
-    
-    // Auto-update simulated role depending on navigated page for convenience
-    if (page === 'admin-dash' || page === 'tables') {
-      setSimulatedRole('admin');
-    } else if (page === 'book' || page === 'my-bookings') {
-      setSimulatedRole('customer');
-    } else if (page === 'home' || page === 'login') {
-      // Keep current role or reset
-    }
   };
 
   const handleRoleChange = (newRole) => {
-    setSimulatedRole(newRole);
     if (newRole === 'guest') {
+      logout();
       setCurrentPage('home');
     }
   };
 
-  // State router renderer (Indonesian Copywriting for Sprint 2)
+  // State router renderer (Indonesian copywriting)
   const renderPageContent = () => {
     switch (currentPage) {
       case 'home':
@@ -68,45 +61,24 @@ function App() {
         );
 
       case 'login':
+        return <Login onNavigate={handleNavigate} />;
+
+      case 'register':
         return (
           <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 3</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Halaman Masuk</h2>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 5</span>
+            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Halaman Pendaftaran</h2>
             <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Form login split-screen dan state autentikasi lokal tiruan akan dibangun lengkap pada **Sprint 3**.
+              Form registrasi pelanggan baru dan visual penunjang akan dibangun lengkap pada **Sprint 5**.
             </p>
-            
-            {/* Quick Login Toggles */}
-            <div className="flex flex-col gap-3 p-4 bg-warm-cream-dark/50 border border-bitter-chocolate/10 w-full mb-8">
-              <p className="text-xs font-semibold uppercase text-bitter-chocolate/60 text-center">Simulasi Uji Coba Cepat</p>
-              <div className="flex gap-4 justify-center">
-                <button
-                  onClick={() => {
-                    setSimulatedRole('customer');
-                    setCurrentPage('book');
-                  }}
-                  className="text-[10px] uppercase tracking-widest font-bold border border-bitter-chocolate/20 py-2.5 px-4 hover:bg-bitter-chocolate hover:text-warm-cream hover:border-transparent transition-all duration-300 text-center cursor-pointer text-bitter-chocolate"
-                >
-                  Sebagai Pelanggan
-                </button>
-                <button
-                  onClick={() => {
-                    setSimulatedRole('admin');
-                    setCurrentPage('admin-dash');
-                  }}
-                  className="text-[10px] uppercase tracking-widest font-bold border border-bitter-chocolate/20 py-2.5 px-4 hover:bg-bitter-chocolate hover:text-warm-cream hover:border-transparent transition-all duration-300 text-center cursor-pointer text-bitter-chocolate"
-                >
-                  Sebagai Admin
-                </button>
-              </div>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => handleNavigate('login')}
+                className="text-xs uppercase font-bold tracking-widest text-antique-gold border-b border-antique-gold/30 hover:border-bitter-chocolate transition-colors duration-300 cursor-pointer"
+              >
+                Sudah memiliki akun? Masuk
+              </button>
             </div>
-
-            <button
-              onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
-            >
-              Kembali ke Beranda
-            </button>
           </div>
         );
 
@@ -171,16 +143,26 @@ function App() {
     }
   };
 
+  const userRole = user ? user.role : 'guest';
+
   return (
     <div onClick={handleAnchorClick}>
       <Layout 
-        userRole={simulatedRole} 
-        onRoleChange={handleRoleChange}
-        showFooter={currentPage !== 'login'}
+        userRole={userRole} 
+        onRoleChange={handleRoleChange} 
+        showFooter={currentPage !== 'login' && currentPage !== 'register'}
       >
         {renderPageContent()}
       </Layout>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
