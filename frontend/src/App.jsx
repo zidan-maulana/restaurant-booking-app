@@ -4,6 +4,8 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import CustomerDashboard from './pages/customer/Dashboard';
+import MyBookings from './pages/customer/MyBookings';
 
 
 function AppContent() {
@@ -29,38 +31,10 @@ function AppContent() {
         return <Home onNavigate={handleNavigate} />;
         
       case 'book':
-        return (
-          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 6</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Halaman Pemesanan</h2>
-            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Modul pemilihan meja interaktif, penanggalan, jam reservasi, dan visual tata letak meja akan dibangun lengkap pada **Sprint 6**.
-            </p>
-            <button
-              onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
-            >
-              Kembali ke Beranda
-            </button>
-          </div>
-        );
+        return <CustomerDashboard onNavigate={handleNavigate} />;
 
       case 'my-bookings':
-        return (
-          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 7</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Reservasi Saya</h2>
-            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Riwayat daftar booking pelanggan dan tombol aksi pembatalan reservasi akan dibangun lengkap pada **Sprint 7**.
-            </p>
-            <button
-              onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
-            >
-              Kembali ke Beranda
-            </button>
-          </div>
-        );
+        return <MyBookings onNavigate={handleNavigate} />;
 
       case 'login':
         return <Login onNavigate={handleNavigate} />;

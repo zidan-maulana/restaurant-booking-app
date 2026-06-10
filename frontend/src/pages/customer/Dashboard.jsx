@@ -110,11 +110,11 @@ export default function Dashboard({ onNavigate }) {
         <div className="text-center flex flex-col gap-6">
           <span className="text-5xl">✨</span>
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-sage-text block mb-2">Reservasi Diajukan</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold block mb-2">Reservasi Diajukan</span>
             <h2 className="font-serif italic text-3xl sm:text-4xl text-bitter-chocolate">Terima Kasih, {user.nama}</h2>
           </div>
 
-          <div className="bg-sage-bg border border-sage-text/10 rounded-lg p-8 text-left space-y-4 mt-4">
+          <div className="bg-warm-cream-dark/50 border border-bitter-chocolate/10 rounded-lg p-8 text-left space-y-4 mt-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-bitter-chocolate/50 block mb-1">Tanggal</span>
@@ -133,7 +133,7 @@ export default function Dashboard({ onNavigate }) {
                 <span className="font-serif text-lg text-bitter-chocolate">{successBooking.guest_count} orang</span>
               </div>
             </div>
-            <div className="pt-4 border-t border-sage-text/10">
+            <div className="pt-4 border-t border-bitter-chocolate/10">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-bitter-chocolate/50">Status:</span>
                 <Badge status="pending" />

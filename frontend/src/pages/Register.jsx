@@ -74,10 +74,10 @@ export default function Register({ onNavigate }) {
           )}
 
           {success ? (
-            <div className="bg-sage-bg border border-sage-text/10 text-sage-text text-xs py-5 px-6 rounded-md font-sans text-center flex flex-col gap-3">
+            <div className="bg-warm-cream-dark/50 border border-bitter-chocolate/10 text-bitter-chocolate text-xs py-5 px-6 rounded-md font-sans text-center flex flex-col gap-3">
               <span className="text-2xl">✨</span>
-              <strong className="font-bold">Pendaftaran Berhasil!</strong>
-              <p className="text-sage-text/80 text-[11px] leading-relaxed">
+              <strong className="font-bold text-antique-gold">Pendaftaran Berhasil!</strong>
+              <p className="text-bitter-chocolate/70 text-[11px] leading-relaxed">
                 Akun Anda telah terdaftar. Anda akan otomatis dialihkan ke halaman masuk dalam beberapa saat...
               </p>
             </div>
