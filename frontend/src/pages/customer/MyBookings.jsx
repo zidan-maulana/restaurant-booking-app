@@ -1,6 +1,6 @@
-import { useState, useContext, useMemo } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { getMyBookings, cancelBooking } from '../../services/mockData';
+import { getMyBookings, cancelBooking } from '../../services/booking';
 import Badge from '../../components/ui/Badge';
 import Modal from '../../components/ui/Modal';
 
@@ -11,13 +11,39 @@ export default function MyBookings({ onNavigate }) {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [bookingsList, setBookingsList] = useState([]);
 
-  // Compute bookingsList synchronously, avoiding useEffect setState triggers
-  const bookingsList = useMemo(() => {
-    // Read refreshKey to mark as dependency
-    if (refreshKey < 0) return [];
-    return user ? getMyBookings(user.id) : [];
+  // Fetch bookings from backend API
+  const fetchMyBookings = async () => {
+    if (!user) return;
+    setIsLoading(true);
+    setError('');
+    try {
+      const data = await getMyBookings();
+      setBookingsList(data);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Gagal mengambil riwayat reservasi.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Sync on mount and key updates
+  useEffect(() => {
+    fetchMyBookings();
   }, [user, refreshKey]);
+
+  // Page focus sync (automatic refetch on focus)
+  useEffect(() => {
+    const handleFocus = () => {
+      fetchMyBookings();
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [user]);
 
   // Format date for indonesian display
   const formatDate = (dateStr) => {
@@ -37,25 +63,22 @@ export default function MyBookings({ onNavigate }) {
     setIsCancelModalOpen(false);
   };
 
-  const handleConfirmCancel = () => {
+  const handleConfirmCancel = async () => {
     if (!selectedBooking || !user) return;
     setIsLoading(true);
     setError('');
 
-    // Simulate API delay for premium feel
-    setTimeout(() => {
-      try {
-        cancelBooking(selectedBooking.id, user.id);
-        // Trigger list refresh via key increment
-        setRefreshKey((prev) => prev + 1);
-        setIsCancelModalOpen(false);
-        setSelectedBooking(null);
-      } catch (err) {
-        setError(err.message || 'Gagal membatalkan reservasi.');
-      } finally {
-        setIsLoading(false);
-      }
-    }, 600);
+    try {
+      await cancelBooking(selectedBooking.id);
+      // Trigger list refresh via key increment
+      setRefreshKey((prev) => prev + 1);
+      setIsCancelModalOpen(false);
+      setSelectedBooking(null);
+    } catch (err) {
+      setError(err.message || 'Gagal membatalkan reservasi.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
