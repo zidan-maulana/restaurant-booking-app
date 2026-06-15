@@ -16,80 +16,117 @@ exports.createBooking = (req, res) => {
     });
   }
 
-  const tableQuery = "SELECT * FROM tables WHERE id = ?";
-
-  db.query(tableQuery, [table_id], (tableErr, tableResults) => {
-    if (tableErr) {
-      console.error(tableErr);
+  db.beginTransaction((err) => {
+    if (err) {
+      console.error(err);
       return res.status(500).json({
-        message: "Gagal mengecek data meja"
+        message: "Gagal membuat booking"
       });
     }
 
-    if (tableResults.length === 0) {
-      return res.status(404).json({
-        message: "Meja tidak ditemukan"
-      });
-    }
+    const tableQuery = "SELECT * FROM tables WHERE id = ? FOR UPDATE";
 
-    const selectedTable = tableResults[0];
-
-    if (guest_count > selectedTable.capacity) {
-      return res.status(400).json({
-        message: `Jumlah tamu melebihi kapasitas meja. Kapasitas meja ini adalah ${selectedTable.capacity} orang`
-      });
-    }
-
-    const checkQuery = `
-      SELECT * FROM bookings 
-      WHERE table_id = ? 
-      AND booking_date = ? 
-      AND booking_time = ?
-      AND status IN ('pending', 'approved')
-    `;
-
-    db.query(
-      checkQuery,
-      [table_id, booking_date, booking_time],
-      (checkErr, checkResults) => {
-        if (checkErr) {
-          console.error(checkErr);
-          return res.status(500).json({
-            message: "Gagal mengecek ketersediaan meja"
+    db.query(tableQuery, [table_id], (tableErr, tableResults) => {
+      if (tableErr) {
+        return db.rollback(() => {
+          console.error(tableErr);
+          res.status(500).json({
+            message: "Gagal mengecek data meja"
           });
-        }
+        });
+      }
 
-        if (checkResults.length > 0) {
-          return res.status(409).json({
-            message: "Meja sudah dibooking pada tanggal dan jam tersebut"
+      if (tableResults.length === 0) {
+        return db.rollback(() => {
+          res.status(404).json({
+            message: "Meja tidak ditemukan"
           });
-        }
+        });
+      }
 
-        const insertQuery = `
-          INSERT INTO bookings 
-          (user_id, table_id, booking_date, booking_time, guest_count, status)
-          VALUES (?, ?, ?, ?, ?, 'pending')
-        `;
+      const selectedTable = tableResults[0];
 
-        db.query(
-          insertQuery,
-          [userId, table_id, booking_date, booking_time, guest_count],
-          (insertErr, result) => {
-            if (insertErr) {
-              console.error(insertErr);
-              return res.status(500).json({
-                message: "Gagal membuat booking"
+      if (guest_count > selectedTable.capacity) {
+        return db.rollback(() => {
+          res.status(400).json({
+            message: `Jumlah tamu melebihi kapasitas meja. Kapasitas meja ini adalah ${selectedTable.capacity} orang`
+          });
+        });
+      }
+
+      const checkQuery = `
+        SELECT * FROM bookings 
+        WHERE table_id = ? 
+        AND booking_date = ? 
+        AND booking_time = ?
+        AND status IN ('pending', 'approved')
+      `;
+
+      db.query(
+        checkQuery,
+        [table_id, booking_date, booking_time],
+        (checkErr, checkResults) => {
+          if (checkErr) {
+            return db.rollback(() => {
+              console.error(checkErr);
+              res.status(500).json({
+                message: "Gagal mengecek ketersediaan meja"
               });
-            }
-
-            res.status(201).json({
-              message: "Booking berhasil dibuat ✅",
-              bookingId: result.insertId
             });
           }
-        );
-      }
-    );
+
+          if (checkResults.length > 0) {
+            return db.rollback(() => {
+              res.status(409).json({
+                message: "Meja sudah dibooking pada tanggal dan jam tersebut"
+              });
+            });
+          }
+
+          const insertQuery = `
+            INSERT INTO bookings 
+            (user_id, table_id, booking_date, booking_time, guest_count, status)
+            VALUES (?, ?, ?, ?, ?, 'pending')
+          `;
+
+          db.query(
+            insertQuery,
+            [userId, table_id, booking_date, booking_time, guest_count],
+            (insertErr, result) => {
+              if (insertErr) {
+                return db.rollback(() => {
+                  console.error(insertErr);
+                  if (insertErr.code === 'ER_DUP_ENTRY') {
+                    return res.status(409).json({
+                      message: "Meja sudah dibooking pada tanggal dan jam tersebut"
+                    });
+                  }
+                  res.status(500).json({
+                    message: "Gagal membuat booking"
+                  });
+                });
+              }
+
+              db.commit((commitErr) => {
+                if (commitErr) {
+                  return db.rollback(() => {
+                    console.error(commitErr);
+                    res.status(500).json({
+                      message: "Gagal menyelesaikan booking"
+                    });
+                  });
+                }
+
+                res.status(201).json({
+                  message: "Booking berhasil dibuat ✅",
+                  bookingId: result.insertId
+                });
+              });
+            }
+          );
+        }
+      );
+    });
   });
 };
 
@@ -231,6 +268,15 @@ exports.cancelBooking = (req, res) => {
     if (results.length === 0) {
       return res.status(403).json({
         message: "Anda tidak memiliki akses ke booking ini"
+      });
+    }
+
+    const booking = results[0];
+    const allowedCancelStatus = ["pending", "approved"];
+
+    if (!allowedCancelStatus.includes(booking.status)) {
+      return res.status(400).json({
+        message: `Booking berstatus ${booking.status} tidak dapat dibatalkan`
       });
     }
 

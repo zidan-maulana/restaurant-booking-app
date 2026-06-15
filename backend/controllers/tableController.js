@@ -118,22 +118,44 @@ exports.updateTable = (req, res) => {
       });
     }
 
-    const query = `
-      UPDATE tables 
-      SET table_number = ?, capacity = ?
-      WHERE id = ?
+    // Capacity check
+    const checkActiveBookingQuery = `
+      SELECT MAX(guest_count) AS max_guests FROM bookings 
+      WHERE table_id = ? 
+      AND status IN ('pending', 'approved')
     `;
-
-    db.query(query, [table_number, capacity, id], (err, result) => {
-      if (err) {
-        console.error(err);
+    db.query(checkActiveBookingQuery, [id], (bookingErr, bookingResults) => {
+      if (bookingErr) {
+        console.error(bookingErr);
         return res.status(500).json({
-          message: "Gagal update meja"
+          message: "Gagal mengecek reservasi aktif meja"
         });
       }
 
-      res.json({
-        message: "Meja berhasil diupdate ✅"
+      const maxGuests = bookingResults[0].max_guests || 0;
+      if (Number(capacity) < maxGuests) {
+        return res.status(409).json({
+          message: `Kapasitas meja tidak dapat dikurangi karena terdapat booking aktif dengan ${maxGuests} tamu`
+        });
+      }
+
+      const query = `
+        UPDATE tables 
+        SET table_number = ?, capacity = ?
+        WHERE id = ?
+      `;
+
+      db.query(query, [table_number, capacity, id], (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({
+            message: "Gagal update meja"
+          });
+        }
+
+        res.json({
+          message: "Meja berhasil diupdate ✅"
+        });
       });
     });
   });
@@ -142,18 +164,35 @@ exports.updateTable = (req, res) => {
 exports.deleteTable = (req, res) => {
   const { id } = req.params;
 
-  const query = "DELETE FROM tables WHERE id = ?";
-
-  db.query(query, [id], (err, result) => {
-    if (err) {
-      console.error(err);
+  // Pre-query validation for bookings associated with table
+  const checkBookingQuery = "SELECT * FROM bookings WHERE table_id = ? LIMIT 1";
+  db.query(checkBookingQuery, [id], (bookingErr, bookingResults) => {
+    if (bookingErr) {
+      console.error(bookingErr);
       return res.status(500).json({
-        message: "Gagal menghapus meja"
+        message: "Gagal mengecek booking terkait meja"
       });
     }
 
-    res.json({
-      message: "Meja berhasil dihapus ✅"
+    if (bookingResults.length > 0) {
+      return res.status(409).json({
+        message: "Meja tidak dapat dihapus karena memiliki booking terkait"
+      });
+    }
+
+    const query = "DELETE FROM tables WHERE id = ?";
+
+    db.query(query, [id], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          message: "Gagal menghapus meja"
+        });
+      }
+
+      res.json({
+        message: "Meja berhasil dihapus ✅"
+      });
     });
   });
 };

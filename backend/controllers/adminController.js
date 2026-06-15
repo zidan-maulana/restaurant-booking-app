@@ -268,15 +268,98 @@ exports.updateTable = (req, res) => {
       });
     }
 
-    const query = "UPDATE tables SET table_number = ?, capacity = ? WHERE id = ?";
+    // Pre-query validation for capacity reduction
+    const checkActiveBookingQuery = `
+      SELECT MAX(guest_count) AS max_guests FROM bookings 
+      WHERE table_id = ? 
+      AND status IN ('pending', 'approved')
+    `;
+    db.query(checkActiveBookingQuery, [id], (bookingErr, bookingResults) => {
+      if (bookingErr) {
+        console.error(bookingErr);
+        return res.status(500).json({
+          success: false,
+          data: null,
+          message: "Gagal mengecek reservasi aktif meja",
+        });
+      }
 
-    db.query(query, [table_number, capacity, id], (err, result) => {
+      const maxGuests = bookingResults[0].max_guests || 0;
+      if (Number(capacity) < maxGuests) {
+        return res.status(409).json({
+          success: false,
+          data: null,
+          message: `Kapasitas meja tidak dapat dikurangi karena terdapat booking aktif dengan ${maxGuests} tamu`,
+        });
+      }
+
+      const query = "UPDATE tables SET table_number = ?, capacity = ? WHERE id = ?";
+
+      db.query(query, [table_number, capacity, id], (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({
+            success: false,
+            data: null,
+            message: "Gagal memperbarui meja",
+          });
+        }
+
+        if (result.affectedRows === 0) {
+          return res.status(404).json({
+            success: false,
+            data: null,
+            message: "Meja tidak ditemukan",
+          });
+        }
+
+        res.json({
+          success: true,
+          data: {
+            id: Number(id),
+            table_number,
+            capacity: Number(capacity),
+          },
+          message: "Meja berhasil diperbarui ✅",
+        });
+      });
+    });
+  });
+};
+
+// DELETE table
+exports.deleteTable = (req, res) => {
+  const { id } = req.params;
+
+  // Pre-query validation for bookings associated with table
+  const checkBookingQuery = "SELECT * FROM bookings WHERE table_id = ? LIMIT 1";
+  db.query(checkBookingQuery, [id], (bookingErr, bookingResults) => {
+    if (bookingErr) {
+      console.error(bookingErr);
+      return res.status(500).json({
+        success: false,
+        data: null,
+        message: "Gagal mengecek booking terkait meja",
+      });
+    }
+
+    if (bookingResults.length > 0) {
+      return res.status(409).json({
+        success: false,
+        data: null,
+        message: "Meja tidak dapat dihapus karena memiliki booking terkait",
+      });
+    }
+
+    const query = "DELETE FROM tables WHERE id = ?";
+
+    db.query(query, [id], (err, result) => {
       if (err) {
         console.error(err);
         return res.status(500).json({
           success: false,
           data: null,
-          message: "Gagal memperbarui meja",
+          message: "Gagal menghapus meja",
         });
       }
 
@@ -290,45 +373,9 @@ exports.updateTable = (req, res) => {
 
       res.json({
         success: true,
-        data: {
-          id: Number(id),
-          table_number,
-          capacity: Number(capacity),
-        },
-        message: "Meja berhasil diperbarui ✅",
+        data: { id: Number(id) },
+        message: "Meja berhasil dihapus ✅",
       });
-    });
-  });
-};
-
-// DELETE table
-exports.deleteTable = (req, res) => {
-  const { id } = req.params;
-
-  const query = "DELETE FROM tables WHERE id = ?";
-
-  db.query(query, [id], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({
-        success: false,
-        data: null,
-        message: "Gagal menghapus meja",
-      });
-    }
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        data: null,
-        message: "Meja tidak ditemukan",
-      });
-    }
-
-    res.json({
-      success: true,
-      data: { id: Number(id) },
-      message: "Meja berhasil dihapus ✅",
     });
   });
 };
