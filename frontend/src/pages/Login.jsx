@@ -124,7 +124,7 @@ export default function Login({ onNavigate }) {
                 type="submit"
                 variant="primary"
                 disabled={isSubmitting}
-                className="w-full justify-center !py-4 rounded-md"
+                className="w-full justify-center !py-4 rounded-none"
               >
                 {isSubmitting ? 'Memproses...' : 'Masuk'}
               </Button>
@@ -149,7 +149,7 @@ export default function Login({ onNavigate }) {
                 type="button"
                 onClick={() => handleQuickLogin('customer')}
                 disabled={isSubmitting}
-                className="text-[10px] uppercase tracking-widest font-bold border border-bitter-chocolate/20 py-2.5 px-3 rounded-md hover:bg-bitter-chocolate hover:text-warm-cream hover:border-transparent transition-all duration-300 text-center cursor-pointer text-bitter-chocolate"
+                className="text-[10px] uppercase tracking-widest font-bold border border-bitter-chocolate/20 py-2.5 px-3 rounded-none hover:bg-bitter-chocolate hover:text-warm-cream hover:border-transparent transition-all duration-300 text-center cursor-pointer text-bitter-chocolate"
               >
                 Sebagai Pelanggan
               </button>
@@ -157,7 +157,7 @@ export default function Login({ onNavigate }) {
                 type="button"
                 onClick={() => handleQuickLogin('admin')}
                 disabled={isSubmitting}
-                className="text-[10px] uppercase tracking-widest font-bold border border-bitter-chocolate/20 py-2.5 px-3 rounded-md hover:bg-bitter-chocolate hover:text-warm-cream hover:border-transparent transition-all duration-300 text-center cursor-pointer text-bitter-chocolate"
+                className="text-[10px] uppercase tracking-widest font-bold border border-bitter-chocolate/20 py-2.5 px-3 rounded-none hover:bg-bitter-chocolate hover:text-warm-cream hover:border-transparent transition-all duration-300 text-center cursor-pointer text-bitter-chocolate"
               >
                 Sebagai Admin
               </button>

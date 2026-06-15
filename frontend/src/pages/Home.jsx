@@ -85,8 +85,8 @@ export default function Home({ onNavigate }) {
   return (
     <div className="flex flex-col bg-warm-cream">
       {/* 1. HERO SECTION: Ruang hangat untuk setiap pertemuan di meja */}
-      <section id="home" className="pt-20 pb-24 flex flex-col items-center justify-center text-center px-6 bg-warm-cream">
-        <div className="flex flex-col items-center gap-6 max-w-3xl">
+      <section id="home" className="pt-28 pb-32 flex flex-col items-center justify-center text-center px-6 bg-warm-cream">
+        <div className="flex flex-col items-center gap-8 max-w-3xl">
           <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-antique-gold block">
             Pengalaman Bersantap Premium
           </span>
@@ -94,12 +94,12 @@ export default function Home({ onNavigate }) {
             Ruang hangat untuk setiap pertemuan di meja.
           </h1>
           <p className="font-sans text-sm sm:text-base text-bitter-chocolate/70 max-w-xl leading-relaxed">
-            Sajian bermakna. Dihidangkan dengan perhatian penuh. Kami mengundang Anda untuk bersantai sejenak, berbincang, dan menikmati rasa yang dibuat untuk dikenang.
+            Sajian bermakna, dihidangkan dengan perhatian penuh. Kami mengundang Anda untuk sejenak bersantai dan menikmati rasa yang dibuat untuk dikenang.
           </p>
           <div className="mt-4">
             <button
               onClick={() => onNavigate('book')}
-              className="bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 px-10 rounded-full transition-colors duration-500 shadow-sm cursor-pointer"
+              className="bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 px-10 rounded-none transition-colors duration-500 shadow-sm cursor-pointer"
             >
               Reservasi Meja
             </button>
@@ -122,7 +122,7 @@ export default function Home({ onNavigate }) {
       </section>
 
       {/* 2. EXPERIENCE SECTION: Keramahtamahan klasik */}
-      <section id="experience" className="py-24 px-6 sm:px-12 bg-warm-cream-dark/20 text-center flex flex-col items-center justify-center w-full border-t border-b border-bitter-chocolate/5">
+      <section id="experience" className="py-28 px-6 sm:px-12 bg-warm-cream-dark/20 text-center flex flex-col items-center justify-center w-full border-t border-b border-bitter-chocolate/5">
         <div className="flex items-center justify-center gap-4 text-antique-gold mb-8">
           <span className="w-12 h-[1px] bg-antique-gold/30"></span>
           <h2 className="font-serif text-2xl sm:text-3xl italic text-bitter-chocolate font-light tracking-wide">
@@ -133,23 +133,17 @@ export default function Home({ onNavigate }) {
 
         <div className="flex flex-col gap-6 text-sm sm:text-base text-bitter-chocolate/80 max-w-3xl leading-relaxed font-sans">
           <p>
-            Atma adalah ruang untuk merayakan pertemuan. Tempat bersantai sejenak, menikmati kebersamaan, dan melupakan kesibukan dunia.
-          </p>
-          <p>
-            Dapur kami mengolah bahan organik musiman terbaik secara jujur. Disajikan hangat oleh tim yang peduli dengan keahlian kuliner.
-          </p>
-          <p>
-            Setiap detail dirancang untuk kenyamanan Anda. Rasa yang dibuat untuk dikenang dalam setiap gigitan dan cerita.
+            Dapur kami mengolah bahan organik musiman terbaik secara jujur, disajikan dengan kehangatan oleh tim yang mendedikasikan diri pada keahlian kuliner klasik. Setiap detail dirancang untuk menciptakan kenyamanan bersantap yang tenang.
           </p>
         </div>
 
         <p className="font-serif italic text-base sm:text-lg text-antique-gold mt-10 max-w-xl leading-relaxed">
-          "Atma bukan sekadar tempat makan, kami ingin menjadi ruang makan favorit Anda."
+          "Menghadirkan kehangatan dalam setiap cerita di meja makan."
         </p>
       </section>
 
       {/* 3. MENU SECTION: Whitespace luas, heading tipografi besar, gaya restoran mewah */}
-      <section id="menu" className="py-28 bg-warm-cream flex flex-col items-center">
+      <section id="menu" className="py-32 bg-warm-cream flex flex-col items-center">
         <div className="max-w-4xl px-6 text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-antique-gold block mb-3">
             Menu Pilihan
@@ -158,7 +152,7 @@ export default function Home({ onNavigate }) {
             Sajian Terbaik Kami
           </h2>
           <p className="font-sans text-xs sm:text-sm text-bitter-chocolate/60 max-w-2xl mx-auto leading-relaxed">
-            Dibuat dengan presisi untuk menghadirkan rasa yang istimewa langsung ke meja Anda.
+            Sajian musiman yang diolah dengan presisi.
           </p>
           
           {/* Menu Category Filter Pills */}
@@ -167,7 +161,7 @@ export default function Home({ onNavigate }) {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`text-xs uppercase tracking-wider font-semibold px-5 py-2 rounded-full border transition-all duration-300 cursor-pointer ${
+                className={`text-xs uppercase tracking-wider font-semibold px-5 py-2 rounded-none border transition-all duration-300 cursor-pointer ${
                   activeCategory === cat
                     ? 'bg-bitter-chocolate text-warm-cream border-bitter-chocolate font-bold'
                     : 'bg-transparent text-bitter-chocolate/65 border-bitter-chocolate/20 hover:text-bitter-chocolate hover:border-bitter-chocolate/60'
@@ -184,21 +178,16 @@ export default function Home({ onNavigate }) {
           {filteredMenu.map((item, idx) => (
             <div
               key={idx}
-              className="bg-warm-cream-dark/20 border border-bitter-chocolate/10 p-6 flex flex-col justify-between transition-all duration-300 hover:border-antique-gold/40 rounded-lg relative"
+              className="bg-warm-cream-dark/15 border border-bitter-chocolate/5 hover:border-antique-gold/30 hover:bg-warm-cream-dark/20 p-8 flex flex-col justify-between transition-all duration-300 rounded-lg relative"
             >
               <div>
-                <div className="flex justify-between items-start gap-4 mb-2">
+                <div className="flex justify-between items-start gap-4 mb-3">
                   <h4 className="font-serif text-lg font-bold text-bitter-chocolate leading-tight">
                     {item.name}
                   </h4>
-                  <div className="flex text-antique-gold text-[10px]">
-                    {Array.from({ length: item.rating }).map((_, i) => (
-                      <span key={i}>★</span>
-                    ))}
-                  </div>
                 </div>
 
-                <p className="font-serif italic text-xs text-antique-gold mb-3 leading-relaxed">
+                <p className="font-sans text-[11px] uppercase tracking-wider text-antique-gold mb-3">
                   {item.tagline}
                 </p>
 
@@ -218,7 +207,7 @@ export default function Home({ onNavigate }) {
       </section>
 
       {/* 4. RESERVATION SECTION: Latar belakang bersih, spasi luas, form kontainer rounded */}
-      <section id="book" className="py-28 border-t border-bitter-chocolate/10 bg-warm-cream-dark/15 px-6 sm:px-12 text-center flex flex-col items-center w-full">
+      <section id="book" className="py-32 border-t border-bitter-chocolate/10 bg-warm-cream-dark/15 px-6 sm:px-12 text-center flex flex-col items-center w-full">
         <div className="max-w-xl text-center mb-12">
           <h2 className="font-serif text-3xl sm:text-4xl italic font-light text-bitter-chocolate">
             Siapkan Tempat Anda
@@ -232,10 +221,9 @@ export default function Home({ onNavigate }) {
         <div className="w-full max-w-xl bg-warm-cream border border-bitter-chocolate/10 p-8 sm:p-10 text-left rounded-lg shadow-sm">
           {formSubmitted ? (
             <div className="text-center py-12 flex flex-col gap-4 animate-fade-in">
-              <span className="text-4xl">✨</span>
               <h3 className="font-serif italic text-2xl text-antique-gold">Reservasi Diajukan</h3>
               <p className="font-sans text-sm text-bitter-chocolate/80 max-w-md mx-auto leading-relaxed">
-                Terima kasih, <strong className="text-bitter-chocolate font-bold">{formData.name}</strong>. Pengajuan reservasi Anda untuk <strong className="text-bitter-chocolate font-bold">{formData.guests}</strong> pada <strong className="text-bitter-chocolate">{formData.date}</strong> pukul <strong className="text-bitter-chocolate">{formData.time}</strong> saat ini sedang menunggu persetujuan host kami.
+                Permintaan reservasi Anda untuk <strong className="text-bitter-chocolate font-bold">{formData.guests}</strong> pada <strong className="text-bitter-chocolate">{formData.date}</strong> pukul <strong className="text-bitter-chocolate">{formData.time}</strong> telah diterima dan sedang ditinjau.
               </p>
               <button
                 onClick={() => {
@@ -261,7 +249,7 @@ export default function Home({ onNavigate }) {
                   onChange={handleInputChange}
                   placeholder="Nama Anda"
                   required
-                  className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm"
+                  className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans"
                 />
               </div>
 
@@ -277,7 +265,7 @@ export default function Home({ onNavigate }) {
                   onChange={handleInputChange}
                   placeholder="email@anda.com"
                   required
-                  className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm"
+                  className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans"
                 />
               </div>
 
@@ -293,7 +281,7 @@ export default function Home({ onNavigate }) {
                     value={formData.date}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm"
+                    className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans"
                   />
                 </div>
 
@@ -306,7 +294,7 @@ export default function Home({ onNavigate }) {
                     value={formData.time}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm appearance-none"
+                    className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans appearance-none"
                   >
                     <option value="">Pilih slot waktu</option>
                     <option value="11:30">11:30</option>
@@ -335,7 +323,7 @@ export default function Home({ onNavigate }) {
                   name="guests"
                   value={formData.guests}
                   onChange={handleInputChange}
-                  className="w-full bg-warm-cream-dark/30 border border-bitter-chocolate/15 py-3 px-4 text-bitter-chocolate rounded-md focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm"
+                  className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans"
                 >
                   <option value="1 Tamu">1 Tamu</option>
                   <option value="2 Tamu">2 Tamu</option>
@@ -349,7 +337,7 @@ export default function Home({ onNavigate }) {
               {/* Reserve Button */}
               <button
                 type="submit"
-                className="mt-4 bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-md transition-colors duration-500 shadow-sm cursor-pointer"
+                className="mt-4 bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-none transition-colors duration-500 shadow-sm cursor-pointer"
               >
                 Reservasi Meja
               </button>

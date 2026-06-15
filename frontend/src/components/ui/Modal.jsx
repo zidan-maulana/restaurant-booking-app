@@ -34,7 +34,7 @@ export default function Modal({
       />
 
       {/* Modal Container */}
-      <div className="relative bg-warm-cream border border-antique-gold/30 rounded-lg max-w-md w-full p-6 sm:p-8 shadow-2xl animate-fade-in z-10 flex flex-col gap-6">
+      <div className="relative bg-warm-cream border border-antique-gold/30 rounded-none max-w-md w-full p-6 sm:p-8 shadow-2xl animate-fade-in z-10 flex flex-col gap-6">
         
         {/* Header */}
         <div className="text-center sm:text-left">

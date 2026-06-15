@@ -75,7 +75,6 @@ export default function Register({ onNavigate }) {
 
           {success ? (
             <div className="bg-warm-cream-dark/50 border border-bitter-chocolate/10 text-bitter-chocolate text-xs py-5 px-6 rounded-md font-sans text-center flex flex-col gap-3">
-              <span className="text-2xl">✨</span>
               <strong className="font-bold text-antique-gold">Pendaftaran Berhasil!</strong>
               <p className="text-bitter-chocolate/70 text-[11px] leading-relaxed">
                 Akun Anda telah terdaftar. Anda akan otomatis dialihkan ke halaman masuk dalam beberapa saat...
@@ -121,7 +120,7 @@ export default function Register({ onNavigate }) {
                   type="submit"
                   variant="primary"
                   disabled={isSubmitting}
-                  className="w-full justify-center !py-4 rounded-md"
+                  className="w-full justify-center !py-4 rounded-none"
                 >
                   {isSubmitting ? 'Mendaftarkan...' : 'Daftar Sekarang'}
                 </Button>

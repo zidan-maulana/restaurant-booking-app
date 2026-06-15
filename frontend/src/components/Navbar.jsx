@@ -48,7 +48,7 @@ export default function Navbar({
         {/* CTA Button */}
         <a
           href="#book"
-          className="hidden md:inline-flex bg-bitter-chocolate text-warm-cream hover:bg-antique-gold transition-colors duration-300 font-sans text-xs font-bold uppercase tracking-[0.15em] py-2.5 px-6 rounded-full"
+          className="hidden md:inline-flex bg-bitter-chocolate text-warm-cream hover:bg-antique-gold transition-colors duration-300 font-sans text-xs font-bold uppercase tracking-[0.15em] py-2.5 px-6 rounded-none"
         >
           Reservasi Sekarang
         </a>
