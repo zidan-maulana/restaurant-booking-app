@@ -59,19 +59,35 @@ exports.createTable = (req, res) => {
     });
   }
 
-  const query = "INSERT INTO tables (table_number, capacity) VALUES (?, ?)";
-
-  db.query(query, [table_number, capacity], (err, result) => {
-    if (err) {
-      console.error(err);
+  const checkQuery = "SELECT * FROM tables WHERE table_number = ?";
+  db.query(checkQuery, [table_number], (checkErr, checkResults) => {
+    if (checkErr) {
+      console.error(checkErr);
       return res.status(500).json({
-        message: "Gagal menambahkan meja"
+        message: "Gagal mengecek nomor meja"
       });
     }
 
-    res.status(201).json({
-      message: "Meja berhasil ditambahkan ✅",
-      tableId: result.insertId
+    if (checkResults.length > 0) {
+      return res.status(409).json({
+        message: "Nomor meja sudah digunakan"
+      });
+    }
+
+    const query = "INSERT INTO tables (table_number, capacity) VALUES (?, ?)";
+
+    db.query(query, [table_number, capacity], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          message: "Gagal menambahkan meja"
+        });
+      }
+
+      res.status(201).json({
+        message: "Meja berhasil ditambahkan ✅",
+        tableId: result.insertId
+      });
     });
   });
 };
@@ -81,22 +97,44 @@ exports.updateTable = (req, res) => {
   const { id } = req.params;
   const { table_number, capacity } = req.body;
 
-  const query = `
-    UPDATE tables 
-    SET table_number = ?, capacity = ?
-    WHERE id = ?
-  `;
+  if (!table_number || !capacity) {
+    return res.status(400).json({
+      message: "Semua field wajib diisi"
+    });
+  }
 
-  db.query(query, [table_number, capacity, id], (err, result) => {
-    if (err) {
-      console.error(err);
+  const checkQuery = "SELECT * FROM tables WHERE table_number = ? AND id != ?";
+  db.query(checkQuery, [table_number, id], (checkErr, checkResults) => {
+    if (checkErr) {
+      console.error(checkErr);
       return res.status(500).json({
-        message: "Gagal update meja"
+        message: "Gagal mengecek nomor meja"
       });
     }
 
-    res.json({
-      message: "Meja berhasil diupdate ✅"
+    if (checkResults.length > 0) {
+      return res.status(409).json({
+        message: "Nomor meja sudah digunakan"
+      });
+    }
+
+    const query = `
+      UPDATE tables 
+      SET table_number = ?, capacity = ?
+      WHERE id = ?
+    `;
+
+    db.query(query, [table_number, capacity, id], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          message: "Gagal update meja"
+        });
+      }
+
+      res.json({
+        message: "Meja berhasil diupdate ✅"
+      });
     });
   });
 };

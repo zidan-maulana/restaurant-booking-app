@@ -189,27 +189,48 @@ exports.createTable = (req, res) => {
     });
   }
 
-  const query = "INSERT INTO tables (table_number, capacity) VALUES (?, ?)";
-
-  db.query(query, [table_number, capacity], (err, result) => {
-    if (err) {
-      console.error(err);
+  // Pre-query validation for duplicate table number
+  const checkQuery = "SELECT * FROM tables WHERE table_number = ?";
+  db.query(checkQuery, [table_number], (checkErr, checkResults) => {
+    if (checkErr) {
+      console.error(checkErr);
       return res.status(500).json({
         success: false,
         data: null,
-        message: "Gagal menambahkan meja",
+        message: "Gagal mengecek nomor meja",
       });
     }
 
-    res.status(201).json({
-      success: true,
-      data: {
-        id: result.insertId,
-        table_number,
-        capacity: Number(capacity),
-        status: "available",
-      },
-      message: "Meja berhasil ditambahkan ✅",
+    if (checkResults.length > 0) {
+      return res.status(409).json({
+        success: false,
+        data: null,
+        message: "Nomor meja sudah digunakan",
+      });
+    }
+
+    const query = "INSERT INTO tables (table_number, capacity) VALUES (?, ?)";
+
+    db.query(query, [table_number, capacity], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          success: false,
+          data: null,
+          message: "Gagal menambahkan meja",
+        });
+      }
+
+      res.status(201).json({
+        success: true,
+        data: {
+          id: result.insertId,
+          table_number,
+          capacity: Number(capacity),
+          status: "available",
+        },
+        message: "Meja berhasil ditambahkan ✅",
+      });
     });
   });
 };
@@ -227,34 +248,55 @@ exports.updateTable = (req, res) => {
     });
   }
 
-  const query = "UPDATE tables SET table_number = ?, capacity = ? WHERE id = ?";
-
-  db.query(query, [table_number, capacity, id], (err, result) => {
-    if (err) {
-      console.error(err);
+  // Pre-query validation for duplicate table number
+  const checkQuery = "SELECT * FROM tables WHERE table_number = ? AND id != ?";
+  db.query(checkQuery, [table_number, id], (checkErr, checkResults) => {
+    if (checkErr) {
+      console.error(checkErr);
       return res.status(500).json({
         success: false,
         data: null,
-        message: "Gagal memperbarui meja",
+        message: "Gagal mengecek nomor meja",
       });
     }
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
+    if (checkResults.length > 0) {
+      return res.status(409).json({
         success: false,
         data: null,
-        message: "Meja tidak ditemukan",
+        message: "Nomor meja sudah digunakan",
       });
     }
 
-    res.json({
-      success: true,
-      data: {
-        id: Number(id),
-        table_number,
-        capacity: Number(capacity),
-      },
-      message: "Meja berhasil diperbarui ✅",
+    const query = "UPDATE tables SET table_number = ?, capacity = ? WHERE id = ?";
+
+    db.query(query, [table_number, capacity, id], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          success: false,
+          data: null,
+          message: "Gagal memperbarui meja",
+        });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          data: null,
+          message: "Meja tidak ditemukan",
+        });
+      }
+
+      res.json({
+        success: true,
+        data: {
+          id: Number(id),
+          table_number,
+          capacity: Number(capacity),
+        },
+        message: "Meja berhasil diperbarui ✅",
+      });
     });
   });
 };

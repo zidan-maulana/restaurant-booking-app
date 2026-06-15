@@ -19,4 +19,20 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Response interceptor to extract clean backend error messages
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.data) {
+      const data = error.response.data;
+      // Extract from { message } or { data: { message } } or { data: null, message }
+      const backendMessage = data.message || (data.data && data.data.message);
+      if (backendMessage) {
+        return Promise.reject(new Error(backendMessage));
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
