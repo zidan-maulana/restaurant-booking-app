@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { adminGetBookings } from '../../services/admin';
+import { adminGetBookings, adminApproveBooking, adminRejectBooking } from '../../services/admin';
 import Badge from '../../components/ui/Badge';
 
 export default function AdminDashboard() {
@@ -25,6 +25,34 @@ export default function AdminDashboard() {
     loadBookings();
   }, []);
 
+  const handleAction = async (bookingId, type) => {
+    // Keep a backup of current bookings for rollback
+    const originalBookings = [...bookings];
+
+    // Optimistically update status
+    const targetStatus = type === 'approve' ? 'approved' : 'rejected';
+    setBookings((prevBookings) =>
+      prevBookings.map((b) =>
+        b.id === bookingId ? { ...b, status: targetStatus } : b
+      )
+    );
+
+    setError('');
+
+    try {
+      if (type === 'approve') {
+        await adminApproveBooking(bookingId);
+      } else {
+        await adminRejectBooking(bookingId);
+      }
+    } catch (err) {
+      console.error(err);
+      // Rollback to original state on failure
+      setBookings(originalBookings);
+      setError(err.message || `Gagal ${type === 'approve' ? 'menyetujui' : 'menolak'} reservasi.`);
+    }
+  };
+
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const d = new Date(dateStr + 'T00:00:00');
@@ -48,7 +76,7 @@ export default function AdminDashboard() {
   if (error) {
     return (
       <div className="max-w-6xl mx-auto px-6 py-20 text-center animate-fade-in">
-        <div className="mb-6 p-4 bg-terracotta-bg border border-terracotta-text/10 text-terracotta-text text-sm rounded-md max-w-md mx-auto">
+        <div className="mb-6 p-4 bg-terracotta-bg border border-terracotta-text/10 text-terracotta-text text-sm rounded-md max-w-md mx-auto animate-fade-in">
           {error}
         </div>
         <button
@@ -98,6 +126,7 @@ export default function AdminDashboard() {
                 <th className="py-4 px-6">Jam booking</th>
                 <th className="py-4 px-6">Nomor meja</th>
                 <th className="py-4 px-6">Status booking</th>
+                <th className="py-4 px-6 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-bitter-chocolate/5 font-sans text-xs">
@@ -120,6 +149,26 @@ export default function AdminDashboard() {
                   </td>
                   <td className="py-4 px-6">
                     <Badge status={booking.status} />
+                  </td>
+                  <td className="py-4 px-6 text-right">
+                    {booking.status === 'pending' ? (
+                      <div className="flex gap-2 justify-end">
+                        <button
+                          onClick={() => handleAction(booking.id, 'reject')}
+                          className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-bold uppercase tracking-wider rounded-md transition-colors duration-300 cursor-pointer"
+                        >
+                          Tolak
+                        </button>
+                        <button
+                          onClick={() => handleAction(booking.id, 'approve')}
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-wider rounded-md transition-colors duration-300 cursor-pointer"
+                        >
+                          Setujui
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-bitter-chocolate/30 text-xs font-semibold">—</span>
+                    )}
                   </td>
                 </tr>
               ))}
