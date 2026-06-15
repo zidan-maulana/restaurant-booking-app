@@ -9,19 +9,32 @@ exports.register = (req, res) => {
     return res.status(400).json({ message: "Semua field wajib diisi" });
   }
 
-  const hashedPassword = bcrypt.hashSync(password, 10);
-
-  const query = "INSERT INTO users (nama, email, password) VALUES (?, ?, ?)";
-
-  db.query(query, [nama, email, hashedPassword], (err, result) => {
-    if (err) {
-      console.error(err);
+  // Check if email already exists
+  const checkQuery = "SELECT * FROM users WHERE email = ?";
+  db.query(checkQuery, [email], (checkErr, checkResults) => {
+    if (checkErr) {
+      console.error(checkErr);
       return res.status(500).json({ message: "Gagal register" });
     }
 
-    res.json({
-      message: "Register berhasil ✅",
-      userId: result.insertId
+    if (checkResults.length > 0) {
+      return res.status(409).json({ message: "Email sudah terdaftar" });
+    }
+
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
+    const query = "INSERT INTO users (nama, email, password) VALUES (?, ?, ?)";
+
+    db.query(query, [nama, email, hashedPassword], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Gagal register" });
+      }
+
+      res.json({
+        message: "Register berhasil ✅",
+        userId: result.insertId
+      });
     });
   });
 };

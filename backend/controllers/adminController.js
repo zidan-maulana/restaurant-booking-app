@@ -53,11 +53,11 @@ exports.getAllBookings = (req, res) => {
 exports.approveBooking = (req, res) => {
   const { id } = req.params;
 
-  const query = "UPDATE bookings SET status = 'approved' WHERE id = ?";
+  const getQuery = "SELECT status FROM bookings WHERE id = ?";
 
-  db.query(query, [id], (err, result) => {
-    if (err) {
-      console.error(err);
+  db.query(getQuery, [id], (getErr, results) => {
+    if (getErr) {
+      console.error(getErr);
       return res.status(500).json({
         success: false,
         data: null,
@@ -65,7 +65,7 @@ exports.approveBooking = (req, res) => {
       });
     }
 
-    if (result.affectedRows === 0) {
+    if (results.length === 0) {
       return res.status(404).json({
         success: false,
         data: null,
@@ -73,10 +73,31 @@ exports.approveBooking = (req, res) => {
       });
     }
 
-    res.json({
-      success: true,
-      data: {},
-      message: "Booking berhasil disetujui ✅",
+    if (results[0].status !== "pending") {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        message: "Hanya booking berstatus pending yang dapat disetujui",
+      });
+    }
+
+    const query = "UPDATE bookings SET status = 'approved' WHERE id = ?";
+
+    db.query(query, [id], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          success: false,
+          data: null,
+          message: "Gagal menyetujui booking",
+        });
+      }
+
+      res.json({
+        success: true,
+        data: {},
+        message: "Booking berhasil disetujui ✅",
+      });
     });
   });
 };
@@ -85,12 +106,11 @@ exports.approveBooking = (req, res) => {
 exports.rejectBooking = (req, res) => {
   const { id } = req.params;
 
-  // Reject only allowed if current status is pending
-  const query = "UPDATE bookings SET status = 'rejected' WHERE id = ? AND status = 'pending'";
+  const getQuery = "SELECT status FROM bookings WHERE id = ?";
 
-  db.query(query, [id], (err, result) => {
-    if (err) {
-      console.error(err);
+  db.query(getQuery, [id], (getErr, results) => {
+    if (getErr) {
+      console.error(getErr);
       return res.status(500).json({
         success: false,
         data: null,
@@ -98,18 +118,39 @@ exports.rejectBooking = (req, res) => {
       });
     }
 
-    if (result.affectedRows === 0) {
-      return res.status(400).json({
+    if (results.length === 0) {
+      return res.status(404).json({
         success: false,
         data: null,
-        message: "Booking tidak ditemukan atau status bukan pending",
+        message: "Booking tidak ditemukan",
       });
     }
 
-    res.json({
-      success: true,
-      data: {},
-      message: "Booking berhasil ditolak ❌",
+    if (results[0].status !== "pending") {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        message: "Hanya booking berstatus pending yang dapat ditolak",
+      });
+    }
+
+    const query = "UPDATE bookings SET status = 'rejected' WHERE id = ?";
+
+    db.query(query, [id], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          success: false,
+          data: null,
+          message: "Gagal menolak booking",
+        });
+      }
+
+      res.json({
+        success: true,
+        data: {},
+        message: "Booking berhasil ditolak ❌",
+      });
     });
   });
 };
