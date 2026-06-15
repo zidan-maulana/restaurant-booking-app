@@ -2,18 +2,51 @@ const db = require("../config/db");
 
 // GET semua meja
 exports.getTables = (req, res) => {
-  const query = "SELECT * FROM tables";
+  const { booking_date, booking_time } = req.query;
 
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({
-        message: "Gagal mengambil data meja"
-      });
-    }
+  if (booking_date && booking_time) {
+    const query = `
+      SELECT 
+        t.id, 
+        t.table_number, 
+        t.capacity,
+        CASE WHEN b.id IS NOT NULL THEN 1 ELSE 0 END AS isBooked
+      FROM tables t
+      LEFT JOIN bookings b ON t.id = b.table_id 
+        AND b.booking_date = ? 
+        AND b.booking_time = ? 
+        AND b.status IN ('pending', 'approved')
+    `;
+    db.query(query, [booking_date, booking_time], (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          message: "Gagal mengambil data meja"
+        });
+      }
 
-    res.json(results);
-  });
+      const formatted = results.map(row => ({
+        id: row.id,
+        table_number: row.table_number,
+        capacity: row.capacity,
+        isBooked: !!row.isBooked
+      }));
+      res.json(formatted);
+    });
+  } else {
+    const query = "SELECT * FROM tables";
+
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          message: "Gagal mengambil data meja"
+        });
+      }
+
+      res.json(results);
+    });
+  }
 };
 
 // GET semua meja

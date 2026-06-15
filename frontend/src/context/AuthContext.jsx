@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useState } from 'react';
+import * as authService from '../services/auth';
 
 export const AuthContext = createContext();
 
@@ -12,87 +13,31 @@ export function AuthProvider({ children }) {
   
   const [loading, setLoading] = useState(false);
 
-  // Simulated login function
-  const login = (email, password) => {
-    return new Promise((resolve, reject) => {
-      setLoading(true);
-      // Small simulated delay for premium feel
-      setTimeout(() => {
-        if (!email || !password) {
-          setLoading(false);
-          reject(new Error('Email dan password wajib diisi.'));
-          return;
-        }
-
-        // Mock accounts mapping
-        if (email === 'admin@atma.com' && password === 'admin') {
-          const mockAdmin = {
-            id: 1,
-            nama: 'Admin Atma',
-            email: 'admin@atma.com',
-            role: 'admin',
-            token: 'mock_jwt_token_admin'
-          };
-          setUser(mockAdmin);
-          localStorage.setItem('atma_mock_user', JSON.stringify(mockAdmin));
-          setLoading(false);
-          resolve(mockAdmin);
-        } else if (email === 'user@atma.com' && password === 'user') {
-          const mockUser = {
-            id: 2,
-            nama: 'Budi Santoso',
-            email: 'user@atma.com',
-            role: 'customer',
-            token: 'mock_jwt_token_customer'
-          };
-          setUser(mockUser);
-          localStorage.setItem('atma_mock_user', JSON.stringify(mockUser));
-          setLoading(false);
-          resolve(mockUser);
-        } else {
-          // Allow other emails for dynamic registration testing, default to customer
-          const mockUser = {
-            id: Date.now(),
-            nama: email.split('@')[0],
-            email: email,
-            role: 'customer',
-            token: 'mock_jwt_token_customer_new'
-          };
-          setUser(mockUser);
-          localStorage.setItem('atma_mock_user', JSON.stringify(mockUser));
-          setLoading(false);
-          resolve(mockUser);
-        }
-      }, 800);
-    });
+  // Real login function using auth service
+  const login = async (email, password) => {
+    setLoading(true);
+    try {
+      const loggedInUser = await authService.login(email, password);
+      setUser(loggedInUser);
+      localStorage.setItem('atma_mock_user', JSON.stringify(loggedInUser));
+      return loggedInUser;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Simulated register function
-  const register = (nama, email, password) => {
-    return new Promise((resolve, reject) => {
-      setLoading(true);
-      setTimeout(() => {
-        if (!nama || !email || !password) {
-          setLoading(false);
-          reject(new Error('Semua kolom pendaftaran wajib diisi.'));
-          return;
-        }
-
-        // Mock success
-        const newUser = {
-          id: Date.now(),
-          nama: nama,
-          email: email,
-          role: 'customer',
-          token: 'mock_jwt_token_customer_new'
-        };
-        setLoading(false);
-        resolve(newUser);
-      }, 800);
-    });
+  // Real register function using auth service
+  const register = async (nama, email, password) => {
+    setLoading(true);
+    try {
+      const result = await authService.register(nama, email, password);
+      return result;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Simulated logout function
+  // Logout function
   const logout = () => {
     setUser(null);
     localStorage.removeItem('atma_mock_user');
