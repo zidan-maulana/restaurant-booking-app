@@ -34,7 +34,7 @@ export default function Modal({
       />
 
       {/* Modal Container */}
-      <div className="relative bg-warm-cream border border-antique-gold/30 rounded-none max-w-md w-full p-6 sm:p-8 shadow-2xl animate-fade-in z-10 flex flex-col gap-6">
+      <div className="relative bg-warm-cream border border-antique-gold/30 rounded-xl max-w-md w-full p-6 sm:p-8 shadow-2xl animate-fade-in z-10 flex flex-col gap-6">
         
         {/* Header */}
         <div className="text-center sm:text-left">
@@ -62,7 +62,7 @@ export default function Modal({
             type="button"
             disabled={isLoading}
             onClick={onConfirm}
-            className={`w-full sm:w-auto text-xs uppercase font-bold tracking-widest py-3 px-8 transition-colors duration-500 rounded-none cursor-pointer text-center ${
+            className={`w-full sm:w-auto text-xs uppercase font-bold tracking-widest py-3 px-8 transition-colors duration-500 rounded-md cursor-pointer text-center ${
               isDangerous
                 ? 'bg-terracotta-text text-warm-cream hover:bg-bitter-chocolate'
                 : 'bg-bitter-chocolate text-warm-cream hover:bg-antique-gold'

@@ -33,9 +33,9 @@ export default function Register({ onNavigate }) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[75vh] border border-bitter-chocolate/10 rounded-lg overflow-hidden bg-warm-cream shadow-sm">
+    <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-80px)] bg-warm-cream w-full">
       {/* Left Column: Visual Dining Room Showcase (Split-screen) */}
-      <div className="hidden lg:block lg:col-span-6 relative bg-bitter-chocolate/5">
+      <div className="hidden lg:block lg:col-span-6 relative bg-bitter-chocolate/5 h-full">
         <img
           src={heroImg}
           alt="Atma Dining Interior"
@@ -56,9 +56,6 @@ export default function Register({ onNavigate }) {
       <div className="lg:col-span-6 flex flex-col justify-center px-8 sm:px-16 py-12 bg-warm-cream-dark/10">
         <div className="max-w-md w-full mx-auto flex flex-col gap-8">
           <div className="text-left">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold block mb-2">
-              Registrasi
-            </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-light italic text-bitter-chocolate mb-1 leading-normal">
               Buat Akun Baru
             </h2>
@@ -120,7 +117,7 @@ export default function Register({ onNavigate }) {
                   type="submit"
                   variant="primary"
                   disabled={isSubmitting}
-                  className="w-full justify-center !py-4 rounded-none"
+                  className="w-full justify-center !py-4 rounded-md"
                 >
                   {isSubmitting ? 'Mendaftarkan...' : 'Daftar Sekarang'}
                 </Button>

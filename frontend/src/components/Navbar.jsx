@@ -10,15 +10,15 @@ export default function Navbar({
         <span className="font-serif italic font-medium border border-bitter-chocolate/30 rounded-full w-8 h-8 flex items-center justify-center text-sm text-antique-gold bg-warm-cream-dark/20 group-hover:border-antique-gold transition-colors duration-300">
           A
         </span>
-        <span className="font-serif italic font-light text-2xl tracking-[0.05em] text-bitter-chocolate group-hover:text-antique-gold transition-colors duration-300">
+        <span className="font-serif italic font-normal text-2xl tracking-[0.03em] text-bitter-chocolate group-hover:text-antique-gold transition-colors duration-300">
           Atma Dining House
         </span>
       </a>
 
       {/* Navigation Links */}
-      <div className="flex items-center gap-6 sm:gap-8 text-xs font-semibold uppercase tracking-[0.15em] text-bitter-chocolate/70">
+      <div className="flex items-center gap-6 sm:gap-8 text-xs font-medium uppercase tracking-[0.1em] text-bitter-chocolate/60">
         <a href="#home" className="hover:text-bitter-chocolate transition-colors duration-300">Beranda</a>
-        <a href="#menu" className="hover:text-bitter-chocolate transition-colors duration-300">Menu</a>
+
         
         {userRole === 'customer' && (
           <>
@@ -39,16 +39,16 @@ export default function Navbar({
         ) : (
           <button
             onClick={() => onRoleChange('guest')}
-            className="text-terracotta-text hover:text-bitter-chocolate transition-colors duration-300 uppercase font-semibold text-xs tracking-[0.15em]"
+            className="text-terracotta-text hover:text-bitter-chocolate transition-colors duration-300 uppercase font-medium text-xs tracking-[0.1em]"
           >
-            Keluar ({userRole === 'admin' ? 'Admin' : 'Pelanggan'})
+            Keluar
           </button>
         )}
 
         {/* CTA Button */}
         <a
           href="#book"
-          className="hidden md:inline-flex bg-bitter-chocolate text-warm-cream hover:bg-antique-gold transition-colors duration-300 font-sans text-xs font-bold uppercase tracking-[0.15em] py-2.5 px-6 rounded-none"
+          className="hidden md:inline-flex bg-bitter-chocolate text-warm-cream hover:bg-antique-gold transition-colors duration-300 font-sans text-xs font-medium uppercase tracking-[0.1em] py-2.5 px-6 rounded-md"
         >
           Reservasi Sekarang
         </a>

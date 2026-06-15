@@ -130,11 +130,10 @@ export default function Dashboard({ onNavigate }) {
       <div className="max-w-2xl mx-auto px-6 py-16 sm:py-24 animate-fade-in">
         <div className="text-center flex flex-col gap-6">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold block mb-2">Reservasi Diajukan</span>
             <h2 className="font-serif italic text-3xl sm:text-4xl text-bitter-chocolate">Terima Kasih, {user.nama}</h2>
           </div>
 
-          <div className="bg-warm-cream-dark/50 border border-bitter-chocolate/10 rounded-none p-8 text-left space-y-4 mt-4">
+          <div className="bg-warm-cream-dark/50 border border-bitter-chocolate/10 rounded-xl p-8 text-left space-y-4 mt-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-bitter-chocolate/50 block mb-1">Tanggal</span>
@@ -184,12 +183,9 @@ export default function Dashboard({ onNavigate }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 sm:py-20 animate-fade-in">
+    <div className="max-w-4xl mx-auto px-6 pt-16 sm:pt-24 pb-12 sm:pb-20 animate-fade-in">
       {/* Page Header */}
       <div className="text-center mb-12">
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold block mb-3">
-          Pemesanan Meja
-        </span>
         <h1 className="font-serif italic text-4xl sm:text-5xl text-bitter-chocolate mb-3">
           Reservasi Meja Anda
         </h1>
@@ -240,7 +236,7 @@ export default function Dashboard({ onNavigate }) {
       {/* ── STEP 1: Date & Time ── */}
       {step === 1 && (
         <div className="max-w-lg mx-auto animate-fade-in">
-          <div className="bg-warm-cream-dark/30 border border-bitter-chocolate/10 rounded-none p-8 space-y-6">
+          <div className="bg-warm-cream-dark/30 border border-bitter-chocolate/10 rounded-xl p-8 space-y-6">
             <h3 className="font-serif italic text-xl text-bitter-chocolate text-center">Pilih Tanggal & Waktu</h3>
 
             {/* Date */}
@@ -253,7 +249,7 @@ export default function Dashboard({ onNavigate }) {
                 value={bookingDate}
                 onChange={(e) => setBookingDate(e.target.value)}
                 min={today}
-                className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans"
+                className="w-full bg-warm-cream/50 border border-bitter-chocolate/20 px-3.5 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none focus:ring-1 focus:ring-antique-gold rounded-md transition-all duration-300 text-sm font-sans"
               />
             </div>
 
@@ -268,7 +264,7 @@ export default function Dashboard({ onNavigate }) {
                     key={slot}
                     type="button"
                     onClick={() => setBookingTime(slot)}
-                    className={`py-2.5 text-xs font-semibold rounded-none border transition-all duration-300 cursor-pointer ${
+                    className={`py-2.5 text-xs font-semibold rounded-md border transition-all duration-300 cursor-pointer ${
                       bookingTime === slot
                         ? 'bg-bitter-chocolate text-warm-cream border-bitter-chocolate'
                         : 'bg-warm-cream border-bitter-chocolate/15 text-bitter-chocolate/70 hover:border-antique-gold hover:text-antique-gold'
@@ -288,7 +284,7 @@ export default function Dashboard({ onNavigate }) {
               <select
                 value={guestCount}
                 onChange={(e) => setGuestCount(Number(e.target.value))}
-                className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans appearance-none"
+                className="w-full bg-warm-cream/50 border border-bitter-chocolate/20 px-3.5 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none focus:ring-1 focus:ring-antique-gold rounded-md transition-all duration-300 text-sm font-sans appearance-none"
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                   <option key={n} value={n}>{n} Tamu</option>
@@ -299,7 +295,7 @@ export default function Dashboard({ onNavigate }) {
             <button
               onClick={handleProceedToTables}
               disabled={isLoadingTables}
-              className="w-full mt-2 bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-none transition-colors duration-500 cursor-pointer disabled:opacity-50"
+              className="w-full mt-2 bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-md transition-colors duration-500 cursor-pointer disabled:opacity-50"
             >
               {isLoadingTables ? 'Memuat...' : 'Lihat Meja Tersedia'}
             </button>
@@ -332,7 +328,7 @@ export default function Dashboard({ onNavigate }) {
 
           {/* Capacity warning */}
           {capacityWarning && (
-            <div className="bg-terracotta-bg border border-terracotta-text/10 text-terracotta-text text-xs py-3 px-5 rounded-none font-sans mb-6 text-center animate-fade-in">
+            <div className="bg-terracotta-bg border border-terracotta-text/10 text-terracotta-text text-xs py-3 px-5 rounded-md font-sans mb-6 text-center animate-fade-in">
               {capacityWarning}
             </div>
           )}
@@ -350,7 +346,7 @@ export default function Dashboard({ onNavigate }) {
                   type="button"
                   onClick={() => handleSelectTable(table.id)}
                   disabled={isBooked}
-                  className={`relative flex flex-col items-center justify-center p-6 rounded-none border-2 transition-all duration-300 cursor-pointer
+                  className={`relative flex flex-col items-center justify-center p-6 rounded-md border-2 transition-all duration-300 cursor-pointer
                     ${isBooked
                       ? 'bg-sepia-bg border-sepia-text/10 opacity-50 cursor-not-allowed'
                       : isSelected
@@ -391,18 +387,7 @@ export default function Dashboard({ onNavigate }) {
             })}
           </div>
 
-          {/* Legend */}
-          <div className="flex items-center justify-center gap-6 text-[10px] uppercase tracking-wider font-semibold text-bitter-chocolate/40 mb-8">
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 border-2 border-bitter-chocolate/10 rounded-none bg-warm-cream-dark/30" /> Tersedia
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 border-2 border-antique-gold rounded-none bg-warm-cream" /> Dipilih
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 border-2 border-sepia-text/10 rounded-none bg-sepia-bg opacity-50" /> Terisi
-            </span>
-          </div>
+
 
           <div className="flex justify-center gap-4">
             <button
@@ -414,7 +399,7 @@ export default function Dashboard({ onNavigate }) {
             <button
               onClick={handleProceedToConfirm}
               disabled={!selectedTableId || !!capacityWarning}
-              className={`bg-bitter-chocolate text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-3.5 px-10 rounded-none transition-colors duration-500 cursor-pointer ${
+              className={`bg-bitter-chocolate text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-3.5 px-10 rounded-md transition-colors duration-500 cursor-pointer ${
                 !selectedTableId || capacityWarning
                   ? 'opacity-40 cursor-not-allowed'
                   : 'hover:bg-antique-gold'
@@ -429,7 +414,7 @@ export default function Dashboard({ onNavigate }) {
       {/* ── STEP 3: Confirmation ── */}
       {step === 3 && selectedTable && (
         <div className="max-w-lg mx-auto animate-fade-in">
-          <div className="bg-warm-cream-dark/30 border border-bitter-chocolate/10 rounded-none p-8">
+          <div className="bg-warm-cream-dark/30 border border-bitter-chocolate/10 rounded-xl p-8">
             <h3 className="font-serif italic text-xl text-bitter-chocolate text-center mb-6">Konfirmasi Reservasi</h3>
 
             <div className="space-y-5">
@@ -463,7 +448,7 @@ export default function Dashboard({ onNavigate }) {
               <button
                 onClick={handleSubmitBooking}
                 disabled={isSubmitting}
-                className="w-full bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-none transition-colors duration-500 cursor-pointer disabled:opacity-50"
+                className="w-full bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-md transition-colors duration-500 cursor-pointer disabled:opacity-50"
               >
                 {isSubmitting ? 'Memproses...' : 'Ajukan Reservasi'}
               </button>

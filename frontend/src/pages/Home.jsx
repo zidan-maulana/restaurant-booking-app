@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import heroImg from '../assets/hero_dining_room.png';
 
 // Menu pilihan premium dengan format mata uang Rupiah (Rp)
@@ -56,8 +57,10 @@ const menuData = [
 const categories = ['Semua', 'Hidangan Pembuka', 'Hidangan Utama', 'Minuman'];
 
 export default function Home({ onNavigate }) {
+  const { user } = useContext(AuthContext);
   const [activeCategory, setActiveCategory] = useState('Semua');
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -77,6 +80,16 @@ export default function Home({ onNavigate }) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    setFormError('');
+    
+    if (!user) {
+      setFormError('Silakan login terlebih dahulu untuk melakukan reservasi.');
+      setTimeout(() => {
+        onNavigate('login');
+      }, 2000);
+      return;
+    }
+
     if (formData.name && formData.email && formData.date && formData.time) {
       setFormSubmitted(true);
     }
@@ -85,11 +98,8 @@ export default function Home({ onNavigate }) {
   return (
     <div className="flex flex-col bg-warm-cream">
       {/* 1. HERO SECTION: Ruang hangat untuk setiap pertemuan di meja */}
-      <section id="home" className="pt-28 pb-32 flex flex-col items-center justify-center text-center px-6 bg-warm-cream">
+      <section id="home" className="pt-12 sm:pt-16 pb-32 flex flex-col items-center justify-center text-center px-6 bg-warm-cream">
         <div className="flex flex-col items-center gap-8 max-w-3xl">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-antique-gold block">
-            Pengalaman Bersantap Premium
-          </span>
           <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-light italic text-bitter-chocolate leading-[1.15] tracking-tight">
             Ruang hangat untuk setiap pertemuan di meja.
           </h1>
@@ -99,7 +109,7 @@ export default function Home({ onNavigate }) {
           <div className="mt-4">
             <button
               onClick={() => onNavigate('book')}
-              className="bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 px-10 rounded-none transition-colors duration-500 shadow-sm cursor-pointer"
+              className="bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 px-10 rounded-md transition-colors duration-500 shadow-sm cursor-pointer"
             >
               Reservasi Meja
             </button>
@@ -107,7 +117,7 @@ export default function Home({ onNavigate }) {
         </div>
 
         {/* Elegant Framed dining room image below the text, matching the visual layout */}
-        <div className="mt-16 w-full max-w-4xl p-3 bg-warm-cream-dark border border-bitter-chocolate/10 rounded-lg">
+        <div className="mt-16 w-full max-w-4xl p-3 bg-warm-cream-dark border border-bitter-chocolate/10 rounded-xl">
           <div className="border border-bitter-chocolate/10 overflow-hidden bg-bitter-chocolate/5 h-[240px] sm:h-[360px] md:h-[420px] rounded-md flex items-center justify-center">
             <img
               src={heroImg}
@@ -145,9 +155,6 @@ export default function Home({ onNavigate }) {
       {/* 3. MENU SECTION: Whitespace luas, heading tipografi besar, gaya restoran mewah */}
       <section id="menu" className="py-32 bg-warm-cream flex flex-col items-center">
         <div className="max-w-4xl px-6 text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-antique-gold block mb-3">
-            Menu Pilihan
-          </span>
           <h2 className="font-serif italic text-4xl sm:text-5xl font-light text-bitter-chocolate mb-6">
             Sajian Terbaik Kami
           </h2>
@@ -161,7 +168,7 @@ export default function Home({ onNavigate }) {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`text-xs uppercase tracking-wider font-semibold px-5 py-2 rounded-none border transition-all duration-300 cursor-pointer ${
+                className={`text-xs uppercase tracking-wider font-semibold px-5 py-2 rounded-md border transition-all duration-300 cursor-pointer ${
                   activeCategory === cat
                     ? 'bg-bitter-chocolate text-warm-cream border-bitter-chocolate font-bold'
                     : 'bg-transparent text-bitter-chocolate/65 border-bitter-chocolate/20 hover:text-bitter-chocolate hover:border-bitter-chocolate/60'
@@ -178,7 +185,7 @@ export default function Home({ onNavigate }) {
           {filteredMenu.map((item, idx) => (
             <div
               key={idx}
-              className="bg-warm-cream-dark/15 border border-bitter-chocolate/5 hover:border-antique-gold/30 hover:bg-warm-cream-dark/20 p-8 flex flex-col justify-between transition-all duration-300 rounded-lg relative"
+              className="bg-warm-cream-dark/15 border border-bitter-chocolate/5 hover:border-antique-gold/30 hover:bg-warm-cream-dark/20 p-8 flex flex-col justify-between transition-all duration-300 rounded-xl relative"
             >
               <div>
                 <div className="flex justify-between items-start gap-4 mb-3">
@@ -218,7 +225,7 @@ export default function Home({ onNavigate }) {
         </div>
 
         {/* Center Reservation Card */}
-        <div className="w-full max-w-xl bg-warm-cream border border-bitter-chocolate/10 p-8 sm:p-10 text-left rounded-lg shadow-sm">
+        <div className="w-full max-w-xl bg-warm-cream border border-bitter-chocolate/10 p-8 sm:p-10 text-left rounded-xl shadow-sm">
           {formSubmitted ? (
             <div className="text-center py-12 flex flex-col gap-4 animate-fade-in">
               <h3 className="font-serif italic text-2xl text-antique-gold">Reservasi Diajukan</h3>
@@ -237,6 +244,11 @@ export default function Home({ onNavigate }) {
             </div>
           ) : (
             <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
+              {formError && (
+                <div className="bg-terracotta-bg border border-terracotta-text/10 text-terracotta-text text-xs py-3.5 px-5 rounded-md font-sans text-center animate-fade-in">
+                  {formError}
+                </div>
+              )}
               {/* Name Field */}
               <div className="flex flex-col gap-2">
                 <label className="text-xs uppercase tracking-wider font-semibold text-bitter-chocolate/60">
@@ -249,7 +261,7 @@ export default function Home({ onNavigate }) {
                   onChange={handleInputChange}
                   placeholder="Nama Anda"
                   required
-                  className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans"
+                  className="w-full bg-warm-cream/50 border border-bitter-chocolate/20 px-3.5 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none focus:ring-1 focus:ring-antique-gold rounded-md transition-all duration-300 text-sm font-sans"
                 />
               </div>
 
@@ -265,7 +277,7 @@ export default function Home({ onNavigate }) {
                   onChange={handleInputChange}
                   placeholder="email@anda.com"
                   required
-                  className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans"
+                  className="w-full bg-warm-cream/50 border border-bitter-chocolate/20 px-3.5 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none focus:ring-1 focus:ring-antique-gold rounded-md transition-all duration-300 text-sm font-sans"
                 />
               </div>
 
@@ -281,7 +293,7 @@ export default function Home({ onNavigate }) {
                     value={formData.date}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans"
+                    className="w-full bg-warm-cream/50 border border-bitter-chocolate/20 px-3.5 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none focus:ring-1 focus:ring-antique-gold rounded-md transition-all duration-300 text-sm font-sans"
                   />
                 </div>
 
@@ -294,7 +306,7 @@ export default function Home({ onNavigate }) {
                     value={formData.time}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans appearance-none"
+                    className="w-full bg-warm-cream/50 border border-bitter-chocolate/20 px-3.5 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none focus:ring-1 focus:ring-antique-gold rounded-md transition-all duration-300 text-sm font-sans appearance-none"
                   >
                     <option value="">Pilih slot waktu</option>
                     <option value="11:30">11:30</option>
@@ -323,7 +335,7 @@ export default function Home({ onNavigate }) {
                   name="guests"
                   value={formData.guests}
                   onChange={handleInputChange}
-                  className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none transition-colors duration-300 text-sm font-sans"
+                  className="w-full bg-warm-cream/50 border border-bitter-chocolate/20 px-3.5 py-2.5 text-bitter-chocolate focus:border-antique-gold focus:outline-none focus:ring-1 focus:ring-antique-gold rounded-md transition-all duration-300 text-sm font-sans"
                 >
                   <option value="1 Tamu">1 Tamu</option>
                   <option value="2 Tamu">2 Tamu</option>
@@ -337,7 +349,7 @@ export default function Home({ onNavigate }) {
               {/* Reserve Button */}
               <button
                 type="submit"
-                className="mt-4 bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-none transition-colors duration-500 shadow-sm cursor-pointer"
+                className="mt-4 bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-md transition-colors duration-500 shadow-sm cursor-pointer"
               >
                 Reservasi Meja
               </button>

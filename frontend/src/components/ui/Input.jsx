@@ -19,7 +19,7 @@ export default function Input({
       <input
         id={id}
         type={type}
-        className="w-full bg-transparent border-b border-bitter-chocolate/20 py-2.5 text-bitter-chocolate font-sans text-sm focus:border-antique-gold focus:outline-none transition-colors duration-300"
+        className="w-full bg-warm-cream/50 border border-bitter-chocolate/20 px-3.5 py-2.5 text-bitter-chocolate font-sans text-sm rounded-md focus:border-antique-gold focus:outline-none focus:ring-1 focus:ring-antique-gold transition-all duration-300"
         {...props}
       />
     </div>

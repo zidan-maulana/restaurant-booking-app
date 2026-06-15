@@ -117,13 +117,10 @@ export default function AdminTableManagement({ onNavigate }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 sm:py-20 animate-fade-in">
+    <div className="max-w-6xl mx-auto px-6 pt-16 sm:pt-24 pb-12 sm:pb-20 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12 border-b border-bitter-chocolate/10 pb-8">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold block mb-2">
-            Panel Administrator
-          </span>
           <h1 className="font-serif italic text-3xl sm:text-4xl text-bitter-chocolate">
             Kelola Meja Restoran
           </h1>
@@ -139,7 +136,7 @@ export default function AdminTableManagement({ onNavigate }) {
 
       {/* Main Error */}
       {error && (
-        <div className="mb-8 p-4 bg-terracotta-bg border border-terracotta-text/10 text-terracotta-text text-sm rounded-lg flex flex-col items-center gap-3">
+        <div className="mb-8 p-4 bg-terracotta-bg border border-terracotta-text/10 text-terracotta-text text-sm rounded-xl flex flex-col items-center gap-3">
           <p>{error}</p>
           <button
             onClick={loadTables}
@@ -156,7 +153,7 @@ export default function AdminTableManagement({ onNavigate }) {
           <div className="w-8 h-8 border-2 border-antique-gold border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : tables.length === 0 ? (
-        <div className="text-center py-16 px-4 bg-warm-cream-dark/20 border border-bitter-chocolate/10 rounded-lg max-w-lg mx-auto">
+        <div className="text-center py-16 px-4 bg-warm-cream-dark/20 border border-bitter-chocolate/10 rounded-xl max-w-lg mx-auto">
           <h3 className="font-serif italic text-xl text-bitter-chocolate mb-2">
             Belum Ada Meja
           </h3>
@@ -169,7 +166,7 @@ export default function AdminTableManagement({ onNavigate }) {
           {tables.map((table) => (
             <div
               key={table.id}
-              className="bg-warm-cream-dark/20 border border-bitter-chocolate/10 rounded-lg p-6 flex flex-col items-center justify-between text-center relative hover:border-antique-gold hover:bg-warm-cream-dark/30 transition-all duration-300 shadow-sm"
+              className="bg-warm-cream-dark/20 border border-bitter-chocolate/10 rounded-xl p-6 flex flex-col items-center justify-between text-center relative hover:border-antique-gold hover:bg-warm-cream-dark/30 transition-all duration-300 shadow-sm"
             >
               {/* Badge/Icon Table number */}
               <div className="font-serif text-2xl italic font-bold text-bitter-chocolate mb-2">

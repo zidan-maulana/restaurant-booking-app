@@ -104,19 +104,16 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 sm:py-20 animate-fade-in">
+    <div className="max-w-6xl mx-auto px-6 pt-16 sm:pt-24 pb-12 sm:pb-20 animate-fade-in">
       {/* Header */}
       <div className="mb-12 border-b border-bitter-chocolate/10 pb-8">
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold block mb-2">
-          Panel Administrator
-        </span>
         <h1 className="font-serif italic text-3xl sm:text-4xl text-bitter-chocolate">
           Kelola Reservasi
         </h1>
       </div>
 
       {/* Booking Table */}
-      <div className="bg-warm-cream-dark/10 border border-bitter-chocolate/10 rounded-lg overflow-hidden shadow-sm">
+      <div className="bg-warm-cream-dark/10 border border-bitter-chocolate/10 rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

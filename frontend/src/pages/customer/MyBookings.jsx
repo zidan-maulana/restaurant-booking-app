@@ -82,13 +82,10 @@ export default function MyBookings({ onNavigate }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 sm:py-20 animate-fade-in">
+    <div className="max-w-4xl mx-auto px-6 pt-16 sm:pt-24 pb-12 sm:pb-20 animate-fade-in">
       
       {/* Page Header */}
       <div className="text-center mb-16">
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold block mb-3">
-          Riwayat Pelanggan
-        </span>
         <h1 className="font-serif italic text-4xl sm:text-5xl text-bitter-chocolate mb-3">
           Reservasi Saya
         </h1>
@@ -100,7 +97,7 @@ export default function MyBookings({ onNavigate }) {
       {/* Booking List Container */}
       {bookingsList.length === 0 ? (
         // Empty State: Elegant SVG Outline Plate
-        <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-warm-cream-dark/20 border border-bitter-chocolate/10 rounded-lg max-w-lg mx-auto">
+        <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-warm-cream-dark/20 border border-bitter-chocolate/10 rounded-xl max-w-lg mx-auto">
           <svg
             className="w-24 h-24 text-bitter-chocolate/20 mb-6"
             viewBox="0 0 100 100"
@@ -130,7 +127,7 @@ export default function MyBookings({ onNavigate }) {
           </p>
           <button
             onClick={() => onNavigate('book')}
-            className="inline-flex items-center justify-center font-sans text-[11px] font-bold uppercase tracking-[0.2em] bg-bitter-chocolate text-warm-cream hover:bg-antique-gold py-3.5 px-8 transition-colors duration-500 rounded-none cursor-pointer"
+            className="inline-flex items-center justify-center font-sans text-[11px] font-bold uppercase tracking-[0.2em] bg-bitter-chocolate text-warm-cream hover:bg-antique-gold py-3.5 px-8 transition-colors duration-500 rounded-md cursor-pointer"
           >
             Pesan Meja Sekarang
           </button>
@@ -254,7 +251,7 @@ export default function MyBookings({ onNavigate }) {
               </div>
             </div>
             {error && (
-              <p className="text-xs text-terracotta-text font-medium text-center bg-terracotta-bg p-2 rounded border border-terracotta-text/10">
+              <p className="text-xs text-terracotta-text font-medium text-center bg-terracotta-bg p-2 rounded-md border border-terracotta-text/10">
                 {error}
               </p>
             )}
