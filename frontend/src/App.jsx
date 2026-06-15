@@ -6,6 +6,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import CustomerDashboard from './pages/customer/Dashboard';
 import MyBookings from './pages/customer/MyBookings';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminTableManagement from './pages/admin/AdminTableManagement';
 
 
 function AppContent() {
@@ -44,38 +46,12 @@ function AppContent() {
 
 
       case 'admin-dash':
-        return (
-          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 8</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Kelola Reservasi (Admin)</h2>
-            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Pusat monitoring admin (Approve/Reject pesanan dengan saringan tanggal & status) akan dibangun lengkap pada **Sprint 8**.
-            </p>
-            <button
-              onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
-            >
-              Kembali ke Beranda
-            </button>
-          </div>
-        );
+        if (!user || user.role !== 'admin') return <Home onNavigate={handleNavigate} />;
+        return <AdminDashboard onNavigate={handleNavigate} />;
 
       case 'tables':
-        return (
-          <div className="flex flex-col items-center justify-center py-24 text-center max-w-xl mx-auto min-h-[50vh]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-antique-gold mb-3">Pratinjau Sprint 9</span>
-            <h2 className="font-serif italic text-4xl text-bitter-chocolate mb-4">Kelola Meja (Admin)</h2>
-            <p className="font-sans text-sm text-bitter-chocolate/70 leading-relaxed mb-8">
-              Panel CRUD Meja (tambah, ubah, hapus meja restoran) oleh admin akan dibangun lengkap pada **Sprint 9**.
-            </p>
-            <button
-              onClick={() => handleNavigate('home')}
-              className="text-xs uppercase font-bold tracking-widest text-bitter-chocolate border-b border-bitter-chocolate hover:text-antique-gold hover:border-antique-gold transition-colors duration-300 cursor-pointer"
-            >
-              Kembali ke Beranda
-            </button>
-          </div>
-        );
+        if (!user || user.role !== 'admin') return <Home onNavigate={handleNavigate} />;
+        return <AdminTableManagement onNavigate={handleNavigate} />;
 
       default:
         return <Home onNavigate={handleNavigate} />;
