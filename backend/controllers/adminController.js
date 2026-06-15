@@ -2,7 +2,7 @@ const db = require("../config/db");
 
 // GET all bookings with optional filters
 exports.getAllBookings = (req, res) => {
-  const { status, date } = req.query;
+  const { date } = req.query;
 
   let query = `
     SELECT 
@@ -23,11 +23,6 @@ exports.getAllBookings = (req, res) => {
   `;
 
   const params = [];
-
-  if (status) {
-    query += " AND bookings.status = ?";
-    params.push(status);
-  }
 
   if (date) {
     query += " AND bookings.booking_date = ?";

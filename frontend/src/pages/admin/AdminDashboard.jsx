@@ -45,6 +45,7 @@ export default function AdminDashboard() {
       } else {
         await adminRejectBooking(bookingId);
       }
+      await loadBookings(); // Refetch database data to avoid stale state
     } catch (err) {
       console.error(err);
       // Rollback to original state on failure

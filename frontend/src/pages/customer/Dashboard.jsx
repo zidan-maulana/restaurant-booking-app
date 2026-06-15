@@ -1,6 +1,6 @@
-import { useState, useContext, useMemo } from 'react';
+import { useState, useContext, useMemo, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { getAvailableTables, createBooking } from '../../services/mockData';
+import { getAvailableTables, createBooking } from '../../services/booking';
 import Badge from '../../components/ui/Badge';
 
 const TIME_SLOTS = [
@@ -10,6 +10,13 @@ const TIME_SLOTS = [
 
 export default function Dashboard({ onNavigate }) {
   const { user } = useContext(AuthContext);
+
+  // Frontend login guard
+  useEffect(() => {
+    if (!user) {
+      onNavigate('login');
+    }
+  }, [user, onNavigate]);
 
   // Form state
   const [bookingDate, setBookingDate] = useState('');
@@ -22,11 +29,10 @@ export default function Dashboard({ onNavigate }) {
   const [error, setError] = useState('');
   const [successBooking, setSuccessBooking] = useState(null);
 
-  // Compute available tables when date & time are selected
-  const availableTables = useMemo(() => {
-    if (!bookingDate || !bookingTime) return [];
-    return getAvailableTables(bookingDate, bookingTime);
-  }, [bookingDate, bookingTime]);
+  // Available tables state (async)
+  const [availableTables, setAvailableTables] = useState([]);
+  const [isLoadingTables, setIsLoadingTables] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get the selected table object
   const selectedTable = useMemo(() => {
@@ -46,12 +52,22 @@ export default function Dashboard({ onNavigate }) {
   // Today's date for min attribute
   const today = new Date().toISOString().split('T')[0];
 
-  const handleProceedToTables = () => {
+  const handleProceedToTables = async () => {
     setError('');
     if (!bookingDate) { setError('Silakan pilih tanggal reservasi.'); return; }
     if (!bookingTime) { setError('Silakan pilih waktu reservasi.'); return; }
     setSelectedTableId(null);
-    setStep(2);
+    
+    setIsLoadingTables(true);
+    try {
+      const data = await getAvailableTables(bookingDate, bookingTime);
+      setAvailableTables(data);
+      setStep(2);
+    } catch (err) {
+      setError(err.message || 'Gagal mengambil meja tersedia.');
+    } finally {
+      setIsLoadingTables(false);
+    }
   };
 
   const handleSelectTable = (tableId) => {
@@ -68,21 +84,26 @@ export default function Dashboard({ onNavigate }) {
     setStep(3);
   };
 
-  const handleSubmitBooking = () => {
+  const handleSubmitBooking = async () => {
+    if (!user) {
+      setError('Sesi telah berakhir. Silakan login kembali.');
+      return;
+    }
     setError('');
+    setIsSubmitting(true);
     try {
-      const newBooking = createBooking({
-        userId: user.id,
-        userName: user.nama,
-        userEmail: user.email,
+      const newBooking = await createBooking({
         tableId: selectedTableId,
         bookingDate,
         bookingTime,
         guestCount: Number(guestCount),
+        tableNumber: selectedTable.table_number,
       });
       setSuccessBooking(newBooking);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Gagal mengirim reservasi.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -277,9 +298,10 @@ export default function Dashboard({ onNavigate }) {
 
             <button
               onClick={handleProceedToTables}
-              className="w-full mt-2 bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-none transition-colors duration-500 cursor-pointer"
+              disabled={isLoadingTables}
+              className="w-full mt-2 bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-none transition-colors duration-500 cursor-pointer disabled:opacity-50"
             >
-              Lihat Meja Tersedia
+              {isLoadingTables ? 'Memuat...' : 'Lihat Meja Tersedia'}
             </button>
           </div>
         </div>
@@ -440,9 +462,10 @@ export default function Dashboard({ onNavigate }) {
             <div className="mt-8 flex flex-col gap-3">
               <button
                 onClick={handleSubmitBooking}
-                className="w-full bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-none transition-colors duration-500 cursor-pointer"
+                disabled={isSubmitting}
+                className="w-full bg-bitter-chocolate hover:bg-antique-gold text-warm-cream font-sans text-xs font-bold uppercase tracking-[0.2em] py-4 rounded-none transition-colors duration-500 cursor-pointer disabled:opacity-50"
               >
-                Ajukan Reservasi
+                {isSubmitting ? 'Memproses...' : 'Ajukan Reservasi'}
               </button>
               <button
                 onClick={() => setStep(2)}

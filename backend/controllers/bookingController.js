@@ -2,6 +2,11 @@ const db = require("../config/db");
 
 // CREATE booking
 exports.createBooking = (req, res) => {
+  if (!req.user || !req.user.id) {
+    return res.status(401).json({
+      message: "User harus login terlebih dahulu"
+    });
+  }
   const userId = req.user.id;
   const { table_id, booking_date, booking_time, guest_count } = req.body;
 
@@ -62,8 +67,8 @@ exports.createBooking = (req, res) => {
 
         const insertQuery = `
           INSERT INTO bookings 
-          (user_id, table_id, booking_date, booking_time, guest_count)
-          VALUES (?, ?, ?, ?, ?)
+          (user_id, table_id, booking_date, booking_time, guest_count, status)
+          VALUES (?, ?, ?, ?, ?, 'pending')
         `;
 
         db.query(
