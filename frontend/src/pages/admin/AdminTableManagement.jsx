@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { adminGetTables, adminCreateTable, adminUpdateTable, adminDeleteTable } from '../../services/admin';
+import { getTables, createTable, updateTable, deleteTable } from '../../services/admin';
 import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
 
@@ -23,7 +23,7 @@ export default function AdminTableManagement({ onNavigate }) {
     setIsLoading(true);
     setError('');
     try {
-      const data = await adminGetTables();
+      const data = await getTables();
       setTables(data);
     } catch (err) {
       console.error(err);
@@ -81,13 +81,13 @@ export default function AdminTableManagement({ onNavigate }) {
     try {
       if (selectedTable) {
         // Edit mode
-        await adminUpdateTable(selectedTable.id, {
+        await updateTable(selectedTable.id, {
           table_number: formNumber,
           capacity: Number(formCapacity),
         });
       } else {
         // Add mode
-        await adminCreateTable({
+        await createTable({
           table_number: formNumber,
           capacity: Number(formCapacity),
         });
@@ -106,7 +106,7 @@ export default function AdminTableManagement({ onNavigate }) {
     setIsSubmitLoading(true);
     setFormError('');
     try {
-      await adminDeleteTable(selectedTable.id);
+      await deleteTable(selectedTable.id);
       await loadTables();
       handleCloseModals();
     } catch (err) {

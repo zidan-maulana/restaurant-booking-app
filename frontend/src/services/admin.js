@@ -86,3 +86,10 @@ export async function adminDeleteTable(id) {
   if (!result.success) throw new Error(result.message);
   return result.data;
 }
+
+export {
+  adminGetTables as getTables,
+  adminCreateTable as createTable,
+  adminUpdateTable as updateTable,
+  adminDeleteTable as deleteTable
+};
