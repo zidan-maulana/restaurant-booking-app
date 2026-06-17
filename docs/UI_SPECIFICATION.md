@@ -138,17 +138,7 @@ Menggunakan Google Fonts yang diimpor ke dalam proyek:
 
 ---
 
-## 7. Cara Menghindari Desain Terlihat "AI Generic"
-Untuk memastikan desain terasa dibuat secara autentik oleh manusia (*human touch*) dan bukan template AI standar:
-1.  **Ganti Border Radius Standar:** Hindari penggunaan sudut membulat balon (`rounded-2xl` atau `rounded-xl`). Gunakan sudut tajam (`rounded-none`) atau sudut bulat sangat kecil (`rounded-sm`).
-2.  **Hilangkan Shadow Mengambang:** AI sering menghasilkan kartu dengan bayangan melayang tebal (`shadow-lg`, `shadow-xl`). Gantilah dengan garis tepi tipis (`border-[0.5px] border-[#2C2421]/15`) atau bayangan solid retro (`shadow-[3px_3px_0px_#2C2421]`).
-3.  **Layout Judul Asimetris:** Posisikan judul halaman sedikit ke kiri atau berikan jarak yang tidak biasa (asimetris) dengan teks deskripsi di bawahnya menggunakan spasi editorial.
-4.  **Bermain dengan Huruf Miring (Italic):** Gunakan tag `*` (*italic*) pada beberapa kata kunci Serif untuk memberi penekanan artistik seperti dalam menu restoran klasik (contoh: *"Experience the art of **thoughtful** dining"*).
-5.  **Aksen Garis Dekoratif:** Tambahkan elemen garis pemisah tipis bergaya vintage di bawah judul utama (`<hr class="border-[#2C2421]/10 my-4" />`).
-
----
-
-## 8. Menjaga Keterbacaan dan Kemudahan Penggunaan Dashboard
+## 7. Menjaga Keterbacaan dan Kemudahan Penggunaan Dashboard
 Gaya vintage/elegan sering kali mengorbankan fungsionalitas demi estetika. Dashboard pada aplikasi ini tetap dijamin mudah digunakan dengan prinsip:
 1.  **Kontras Teks Tinggi:** Semua teks informasi penting (nomor meja, tanggal, jam, status, nama tamu) menggunakan warna Bitter Chocolate gelap (`#2C2421`) di atas latar cream terang, sehingga memenuhi standar aksesibilitas kontras.
 2.  **Tombol Aksi Tetap Jelas:** Tombol penting seperti "Approve", "Reject", dan "Cancel" tidak disamarkan dengan font miring yang tipis. Mereka tetap berupa tombol ber-badge dengan ikon penjelas yang kontras dan area klik yang cukup besar (`px-4 py-2`).
